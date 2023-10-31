@@ -5,6 +5,9 @@ import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import AuthScreen from './screens/AuthScreen';
+
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -18,16 +21,12 @@ export const unstable_settings = {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
-  const [loaded, error] = useFonts({
+function RootLayout() {
+  const { isAuthenticated } = useAuth();
+  const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
   });
-
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
-  useEffect(() => {
-    if (error) throw error;
-  }, [error]);
 
   useEffect(() => {
     if (loaded) {
@@ -39,7 +38,7 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav />;
+  return isAuthenticated ? <RootLayoutNav /> : <AuthScreen />;
 }
 
 function RootLayoutNav() {
@@ -54,3 +53,13 @@ function RootLayoutNav() {
     </ThemeProvider>
   );
 }
+
+const App = () => {
+  return (
+    <AuthProvider>
+      <RootLayout />
+    </AuthProvider>
+  );
+}
+
+export default App;
