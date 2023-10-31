@@ -1,7 +1,7 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, Tabs } from "expo-router";
 import { Pressable, useColorScheme } from "react-native";
-import { Text, View } from "../../components/Themed";
+import { Text, View } from "react-native";
 import Colors from "../../constants/Colors";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -21,14 +21,12 @@ export default function TabLayout() {
 
   return (
     <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-      }}
+
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: "Tab One",
+          title: "Home",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
           headerRight: () => (
             <View className="flex-row">
@@ -45,36 +43,60 @@ export default function TabLayout() {
                 </Pressable>
               </Link> */}
               {/* <Link href="/modal" asChild> */}
-                <Pressable>
-                  {({ pressed }) => (
-                    <FontAwesome
-                      name="sign-out"
-                      size={25}
-                      color={Colors[colorScheme ?? "light"].text}
-                      style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                      onPress={logout}
-                    />
-                  )}
-                </Pressable>
+              <Pressable>
+                {({ pressed }) => (
+                  <FontAwesome
+                    name="sign-out"
+                    size={25}
+                    color="black"
+                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+                    onPress={logout}
+                  />
+                )}
+              </Pressable>
               {/* </Link>               */}
             </View>
           ),
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="nearbyTab"
         options={{
-          title: "Tab Two",
+          title: "Nearby",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="three"
+        name="mapTab"
         options={{
-          title: "Tab Three",
+          title: "Map",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
+
+      <Tabs.Screen
+        name="routesTab"
+        options={{
+          title: "Routes",
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+
+      <Tabs.Screen
+        name="challengesTab"
+        options={{
+          title: "Challenges",
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+
+      {/* <Tabs.Screen
+        name="profileTab"
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}  
+      /> */}
     </Tabs>
   );
 }

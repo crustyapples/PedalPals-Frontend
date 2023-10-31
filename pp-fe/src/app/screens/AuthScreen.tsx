@@ -61,21 +61,24 @@ const AuthScreen = () => {
   
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', padding: 16 }}>
+    <View className='flex justify-center pt-64 px-4'>
+      <Text className='font-bold text-5xl text-center mb-12'>Welcome to PedalPals!</Text>
       {!isLogin && (
         <>
           <TextInput
             value={username}
             onChangeText={setUsername}
             placeholder="Username"
-            style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 8 }}
+            placeholderTextColor={'gray'}
+            className='border rounded p-2 mb-4'
             autoCapitalize="none"
           />
           <TextInput
             value={name}
             onChangeText={setName}
             placeholder="Name"
-            style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 8 }}
+            placeholderTextColor={'gray'}
+            className='border rounded p-2 mb-4'
           />
         </>
       )}
@@ -83,15 +86,19 @@ const AuthScreen = () => {
         value={email}
         onChangeText={setEmail}
         placeholder="Email"
-        style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 8 }}
+        placeholderTextColor={'gray'}
+        className='border rounded p-2 mb-4'
+        // style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 8 }}
         keyboardType="email-address"
         autoCapitalize="none"
       />
       <TextInput
         value={password}
         onChangeText={setPassword}
+        placeholderTextColor={'gray'}
+        className='border rounded p-2 mb-4'
         placeholder="Password"
-        style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 8 }}
+        // style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 8 }}
         secureTextEntry
       />
       <Button title={isLogin ? 'Login' : 'Register'} onPress={authenticate} />

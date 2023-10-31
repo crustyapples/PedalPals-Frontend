@@ -1,11 +1,13 @@
 import { StyleSheet } from 'react-native';
 
-import EditScreenInfo from '../../components/EditScreenInfo';
-import { Text, View } from '../../components/Themed';
+import EditScreenInfo from '../components/EditScreenInfo';
+// import { Text, View } from '../../components/Themed';
+import { Text, View } from 'react-native';
 import { useAuthToken } from '../contexts/AuthContext';
 import { useEffect, useState } from 'react';
+import HomePage from '../screens/HomeScreen';
 
-export default function TabOneScreen() {
+export default function HomeTab() {
   const getToken = useAuthToken();
   const [token, setToken] = useState('');
 
@@ -21,28 +23,15 @@ export default function TabOneScreen() {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
+    <View className='flex justify-center'>
+      {/* <Text style={styles.title}>Home Page goes here</Text>
       <Text>Access Token: {token}</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+      <EditScreenInfo path="app/(tabs)/index.tsx" /> */}
+      {/* <Text className='font-bold'>Access Token: {token}</Text> */}
+      <HomePage />
     </View>
+    
+
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});
