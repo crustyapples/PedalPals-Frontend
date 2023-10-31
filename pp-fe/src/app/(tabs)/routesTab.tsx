@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from 'react-native';
+import { Text, ScrollView, FlatList } from 'react-native';
 import RoutePage from '../screens/RouteScreen';
 
 export default function RoutesTab() {
@@ -12,9 +12,9 @@ export default function RoutesTab() {
     //   <EditScreenInfo path="app/(tabs)/routesTab.tsx" />
     // </View>
 
-    <View>
+    <ScrollView>
       <RoutePage />
-    </View>
+    </ScrollView>
   );
 }
 
