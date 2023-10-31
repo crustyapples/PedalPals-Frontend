@@ -4,6 +4,13 @@ import { Pressable, useColorScheme } from 'react-native';
 
 import Colors from '../../constants/Colors';
 
+import HomePage from "../../screens/HomePage";
+import MapChoosingPathPage from "../../screens/MapChoosingPathPage";
+import RoutePage from "../../screens/RoutePage";
+import NearbyPage from "../../screens/NearbyPage";
+import Challenges from "../../screens/Challenges";
+
+
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
