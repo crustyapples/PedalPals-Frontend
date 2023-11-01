@@ -4,6 +4,10 @@ import { Pressable, useColorScheme } from "react-native";
 import { Text, View } from "react-native";
 import Colors from "../../constants/Colors";
 import { useAuth } from "../contexts/AuthContext";
+import React, { useState } from 'react';
+import ProfilePage from "../screens/ProfileScreen";
+import HomeTab from ".";
+import MapPage from "../screens/MapScreen";
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -18,16 +22,41 @@ function TabBarIcon(props: {
 export default function TabLayout() {
   const { logout } = useAuth();
   const colorScheme = useColorScheme();
+  // const [showProfilePage, setshowProfilePage] = useState(false);
+
+
+
 
   return (
     <Tabs
 
     >
       <Tabs.Screen
-        name="index"
+        name={"index"}
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          headerLeft: () => (
+
+            <View className="flex-row">
+              <Link href="/screens/ProfileScreen" asChild>
+              <Pressable>
+                  {({ pressed }) => (
+                    <FontAwesome
+                      name="info-circle"
+                      size={25}
+                      color={Colors[colorScheme ?? "light"].text}
+                      style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+                    />
+                  )}
+                </Pressable>
+
+              </Link>
+            
+            {/* <Link href="/modal" asChild> */}
+            </View>
+
+          ),
           headerRight: () => (
             <View className="flex-row">
               {/* <Link href="/modal" asChild>
@@ -43,7 +72,7 @@ export default function TabLayout() {
                 </Pressable>
               </Link> */}
               {/* <Link href="/modal" asChild> */}
-              <Pressable>
+              {/* <Pressable>
                 {({ pressed }) => (
                   <FontAwesome
                     name="sign-out"
@@ -53,8 +82,22 @@ export default function TabLayout() {
                     onPress={logout}
                   />
                 )}
-              </Pressable>
+              </Pressable> */}
               {/* </Link>               */}
+
+              <Link href="/screens/NotificationScreen" asChild>
+                <Pressable>
+                  {({ pressed }) => (
+                    <FontAwesome
+                      name="info-circle"
+                      size={25}
+                      color={Colors[colorScheme ?? "light"].text}
+                      style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+                    />
+                  )}
+                </Pressable>
+              </Link>
+
             </View>
           ),
         }}
