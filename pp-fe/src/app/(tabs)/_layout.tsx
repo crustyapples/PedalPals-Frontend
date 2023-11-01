@@ -71,8 +71,10 @@ export default function TabLayout() {
                   )}
                 </Pressable>
               </Link> */}
-              {/* <Link href="/modal" asChild> */}
-              {/* <Pressable>
+
+
+              <Link href="/modal" asChild>
+              <Pressable>
                 {({ pressed }) => (
                   <FontAwesome
                     name="sign-out"
@@ -82,21 +84,9 @@ export default function TabLayout() {
                     onPress={logout}
                   />
                 )}
-              </Pressable> */}
-              {/* </Link>               */}
+              </Pressable>
+              </Link>             
 
-              <Link href="/screens/NotificationScreen" asChild>
-                <Pressable>
-                  {({ pressed }) => (
-                    <FontAwesome
-                      name="info-circle"
-                      size={25}
-                      color={Colors[colorScheme ?? "light"].text}
-                      style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                    />
-                  )}
-                </Pressable>
-              </Link>
 
             </View>
           ),
