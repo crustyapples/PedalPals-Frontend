@@ -43,7 +43,7 @@ const NearbyPage: React.FC = () => {
         
         const queryParams  = {
           "radius": distance,
-        }
+        };
     
         // const queryString = new URLSearchParams(queryParams).toString();
 
@@ -53,8 +53,8 @@ const NearbyPage: React.FC = () => {
         //   headers: { Authorization: 'Bearer ${token}', 'Content-Type': 'application/json' },
         // });
 
-        response = await axios.get(BASE_URL + '/find-nearby-cyclists',  { data: 5,
-          headers: { Authorization: 'Bearer ${token}', 'Content-Type': 'application/json' },
+        response = await axios.get(BASE_URL + `/find-nearby-cyclists`,  { params: queryParams,
+          headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         });
 
         if (response.status === 200) {
