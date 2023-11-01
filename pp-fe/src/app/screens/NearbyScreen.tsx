@@ -57,7 +57,7 @@ const NearbyPage: React.FC = () => {
     // return () => clearInterval(intervalId);
 
     findNearbyCyclist();
-  }, [distance]);
+  }, [Math.round(distance)]);
 
 
 
