@@ -3,10 +3,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: (token: string, email: string) => void;
+  login: (token: string, email: string, userId: string) => void;
   logout: () => void;
   getToken: () => Promise<string | null>;
   getEmail: () => Promise<string | null>;
+  getUserId: () => Promise<string | null>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -29,9 +30,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     loadToken();
   }, []);
 
-  const login = async (token: string, email: string) => {
+  const login = async (token: string, email: string, userId: string) => {
     await AsyncStorage.setItem('access_token', token);
     await AsyncStorage.setItem('email', email);
+    await AsyncStorage.setItem('userId', userId)
     setIsAuthenticated(true);
   };
 
@@ -51,10 +53,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return email;
   }
 
+  const getUserId = async () => {
+    const userId = await AsyncStorage.getItem('userId');
+    return userId;
+  }
+
 
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, getToken, getEmail }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, getToken, getEmail, getUserId }}>
       {children}
     </AuthContext.Provider>
   );
@@ -84,4 +91,23 @@ export const useAuthEmail = () => {
   }
 
   return context.getEmail;
+}
+
+// hook called useAuthDetails that returns the token, email and userid
+export const useAuthDetails = () => {
+  const context = useContext(AuthContext);
+
+  if (context === undefined) {
+    throw new Error('useAuthDetails must be used within an AuthProvider');
+  }
+
+  const getToken = context.getToken;
+  const getEmail = context.getEmail;
+  const getUserId = context.getUserId;
+
+  return {
+    getToken,
+    getEmail,
+    getUserId
+  }
 }

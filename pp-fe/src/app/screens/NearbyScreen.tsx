@@ -2,18 +2,31 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Alert } from "react-native";
 import Slider from "@react-native-community/slider";
 import UserItem from "@/src/app/components/UserItem";
-import { useAuthToken } from '../contexts/AuthContext';
+import { useAuthDetails, useAuthToken } from '../contexts/AuthContext';
+import * as Location from 'expo-location';
 import axios, {AxiosRequestConfig} from 'axios';
 
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
+// async functoin to request for location using the location service from expo location
+async function getUserLocation() {
+  let { status } = await Location.requestForegroundPermissionsAsync();
+  if (status !== 'granted') {
+    Alert.alert('Permission not granted', 'Allow the app to use location service.');
+    return;
+  }
+
+  let location = await Location.getCurrentPositionAsync({});
+  return location;
+}
+
 const NearbyPage: React.FC = () => {
   const [distance, setDistance] = useState(5);
   const [nearbyUsers, setNearbyUsers] = useState([]);
-  const getToken = useAuthToken();
+  const { getToken,getUserId, getEmail} = useAuthDetails();
   const [token, setToken] = useState('');
-
-  
+  const [userId, setUserId] = useState('');
+  const [email, setEmail] = useState('');
 
   const findNearbyCyclist = async () => {
     try {
@@ -33,6 +46,28 @@ const NearbyPage: React.FC = () => {
   
       const data = await response.json();
       console.log(data);
+
+      if (data.message == "User has not shared location") {
+        // get location and call findnearbycyclist again
+        console.log("User has not shared location");
+        const location = await getUserLocation();
+        console.log("User location:", location);
+        if(location){
+          // make an UPDATE call to /user/user_id to update location
+          const requestData = {
+            location: {
+              coordinates: `${location.coords.latitude},${location.coords.longitude}`,
+              gps_persmission: "Granted"
+            }
+          }
+          const response = await axios.put(BASE_URL + `/users/${userId}`, requestData, {
+            headers: {
+              'Authorization': 'Bearer ' + token,
+              'Content-Type': 'application/json'
+            }
+          })
+        }
+      }
     } catch (error) {
       console.error('Network error:', error);
     }
@@ -40,13 +75,21 @@ const NearbyPage: React.FC = () => {
   
 
   useEffect(() => {
-    const fetchToken = async () => {
+    const fetchDetails = async () => {
       const token = await getToken();
+      const user_id = await getUserId();
+      const email = await getEmail();
+
       console.log('Token:', token);
+      console.log('User ID:', user_id);
+      console.log('Email:', email);
+
       setToken(token);
+      setUserId(user_id);
+      setEmail(email);
     };
 
-    fetchToken();
+    fetchDetails();
   }, []);
 
   useEffect(() => {
@@ -55,8 +98,10 @@ const NearbyPage: React.FC = () => {
     // }, 1000); // 1 second
 
     // return () => clearInterval(intervalId);
-
-    findNearbyCyclist();
+    if (token) {
+      findNearbyCyclist();
+    }
+    
   }, [Math.round(distance)]);
 
 

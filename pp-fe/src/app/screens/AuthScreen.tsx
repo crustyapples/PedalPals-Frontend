@@ -49,7 +49,9 @@ const AuthScreen = () => {
       }
       else if (response.data && response.data.access_token) {
         console.log('Authentication successful!', response.data.access_token);
-        login(response.data.access_token, email);
+        login(response.data.access_token, email, response.data.user_id);
+        console.log(response.data.user_id);
+        console.log(email);
       } else {
         Alert.alert('Authentication failed', 'Please check your credentials');
       }
