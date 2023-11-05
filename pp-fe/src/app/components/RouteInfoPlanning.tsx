@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
   View, 
   Text, 
@@ -9,6 +9,10 @@ import {
   TouchableWithoutFeedback,
   Keyboard
 } from "react-native";
+import { useAuthToken } from '../contexts/AuthContext';
+import axios, {AxiosRequestConfig} from 'axios';
+
+const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
 const RouteInfoPlanning: React.FC = () => {
   const PlanPathButton = ({ onPress, title }) => {
@@ -25,6 +29,76 @@ const RouteInfoPlanning: React.FC = () => {
 
   const [start_Text, onChangeStartText] = useState("");
   const [end_Text, onChangeEndText] = useState("");
+
+  const getToken = useAuthToken();
+  const [token, setToken] = useState('');
+
+  const getStartSuggestionResponse = async () => {
+    try {
+      const response = await fetch(BASE_URL + '/address-autocomplete', {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ "input_address": start_Text })
+      });
+  
+      if (!response.ok) {
+        console.error('Server responded with an error:', response.statusText);
+        return;
+      }
+  
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error('Network error:', error);
+    }
+
+  };
+
+  const getEndSuggestionResponse = async () => {
+
+    try {
+      const response = await fetch(BASE_URL + '/address-autocomplete', {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ "input_address": end_Text })
+      });
+  
+      if (!response.ok) {
+        console.error('Server responded with an error:', response.statusText);
+        return;
+      }
+  
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error('Network error:', error);
+    }
+
+  };
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      const token = await getToken();
+      console.log('Token:', token);
+      setToken(token);
+    };
+
+    fetchToken();
+  }, []);
+
+  useEffect(() => {
+
+    getStartSuggestionResponse();
+    getEndSuggestionResponse();
+  }, [start_Text, end_Text]);
+
+
 
   return (
     <KeyboardAvoidingView

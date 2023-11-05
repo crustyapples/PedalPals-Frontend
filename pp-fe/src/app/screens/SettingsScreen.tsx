@@ -10,6 +10,8 @@ import SettingsAccount from '../components/SettingsAccount';
 
 
 
+
+
 const SettingsPage: React.FC= () => {
 
 
@@ -19,7 +21,6 @@ const SettingsPage: React.FC= () => {
             <SettingsUnits />
             <SettingsPrivacy />
             <SettingsAccount />
-
 
 
         </View>

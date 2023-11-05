@@ -1,9 +1,11 @@
 import { StyleSheet } from 'react-native';
+import React, { useState } from 'react';
 
 import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View, ScrollView, Image } from 'react-native';
+import { Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
 import Leaderboard from '../components/LeaderBoard';
 import WeeklyChallengeRoute from '../components/WeeklyChallengeRoute';
+import DropdownEditDetails from './DropdownEditDetails';
 
 
 type UserDetailsProps = {
@@ -20,6 +22,8 @@ type UserDetailsProps = {
 
 const UserDetails: React.FC<UserDetailsProps>= ({profilePic, username, numOfPals, teleHandle, instaHandle, numOfReward1, numOfReward2, numOfReward3}) => {
 
+    const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+
     return(
         <View>
             <View className = "flex-row justify-center">
@@ -29,8 +33,13 @@ const UserDetails: React.FC<UserDetailsProps>= ({profilePic, username, numOfPals
                         <View className = "flex-row justify-center items-center mt-3">
                             <Text className = "font-Poppins_Bold text-3xl text-black text-center ">{username}</Text>
                             <View className = "absolute right-10">
-                                <Image className = "h-8 w-8" source={require("@/src/assets/images/edit-icon.png")} />
+                                <TouchableOpacity onPress={() => setIsDropdownVisible(!isDropdownVisible)}>
+                                    <Image className = "h-8 w-8" source={require("@/src/assets/images/edit-icon.png")} />
+                                </TouchableOpacity>
+                                
                             </View>
+
+                            
             
                         </View>   
                             
@@ -43,7 +52,7 @@ const UserDetails: React.FC<UserDetailsProps>= ({profilePic, username, numOfPals
                             <View className = "flex-row">
                                 <View className = "flex-row items-center justify-center ">
                                         <Image className = "h-8 w-8" source={require("@/src/assets/images/tele-icon.png")} />
-                                        <Text className = "ml-1 font-Poppins_Regular">@{teleHandle}</Text>
+                                        <Text className = "ml-1 font-Poppins_Regular">{teleHandle}</Text>
                                 </View>
 
                                 <View className = "flex-row items-center justify-center  ml-3">
@@ -54,6 +63,7 @@ const UserDetails: React.FC<UserDetailsProps>= ({profilePic, username, numOfPals
                         </View>
 
 
+                        <DropdownEditDetails visibleState={{ visible:isDropdownVisible, setVisible: setIsDropdownVisible }}  />
 
                         <View className = "flex-row justify-center mt-3">
                             <View className = "flex-row">

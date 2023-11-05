@@ -1,7 +1,7 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, Tabs } from "expo-router";
 import { Pressable, useColorScheme } from "react-native";
-import { Text, View } from "react-native";
+import { Text, View, Image } from "react-native";
 import Colors from "../../constants/Colors";
 import { useAuth } from "../contexts/AuthContext";
 import React, { useState } from 'react';
@@ -40,7 +40,7 @@ export default function TabLayout() {
 
             <View className="flex-row">
               <Link href="/screens/ProfileScreen" asChild>
-              <Pressable>
+              {/* <Pressable>
                   {({ pressed }) => (
                     <FontAwesome
                       name="info-circle"
@@ -49,7 +49,12 @@ export default function TabLayout() {
                       style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                     />
                   )}
-                </Pressable>
+                </Pressable> */}
+                <Pressable onPress={(pressed) => {
+                    // Your onPress action here
+                  }}>
+                    <Image source={require('@/src/assets/images/favicon.png')} />
+                  </Pressable>
 
               </Link>
             
@@ -73,7 +78,7 @@ export default function TabLayout() {
               </Link> */}
 
 
-              <Link href="/modal" asChild>
+              
               <Pressable>
                 {({ pressed }) => (
                   <FontAwesome
@@ -85,7 +90,14 @@ export default function TabLayout() {
                   />
                 )}
               </Pressable>
-              </Link>             
+              {/* <Link href="/screens/ProfileScreen" asChild>
+                <Pressable onPress={(pressed) => {
+                    // Your onPress action here
+                  }}>
+                    <Image source={require('@/src/assets/images/notification-icon.png')} />
+                  </Pressable>
+
+              </Link>              */}
 
 
             </View>

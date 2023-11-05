@@ -49,7 +49,7 @@ const AuthScreen = () => {
       }
       else if (response.data && response.data.access_token) {
         console.log('Authentication successful!', response.data.access_token);
-        login(response.data.access_token);
+        login(response.data.access_token, email);
       } else {
         Alert.alert('Authentication failed', 'Please check your credentials');
       }
