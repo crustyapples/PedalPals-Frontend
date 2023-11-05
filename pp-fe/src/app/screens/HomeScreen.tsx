@@ -2,6 +2,8 @@ import React from 'react';
 import { View, ScrollView } from 'react-native';
 import PostCard from '@/src/app/components/PostCard';
 
+// make a call to /posts/<user_id> to get all posts by user
+
 const dummyData = [
   {
     profilePic: require("@/src/assets/images/favicon.png"),
