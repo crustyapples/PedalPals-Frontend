@@ -1,7 +1,19 @@
 import React from "react";
 import { View, Text, Image, Button, FlatList, TextInput, Pressable } from "react-native";
 
-const MapButtons = () => {
+type MapButtonsProps = {
+  onBackClick: any
+
+};
+
+
+const MapButtons: React.FC<MapButtonsProps>= ({onBackClick}) => {
+
+    const backOnPressFunction = () => {
+      // Define the action when the button is pressed
+      // console.log('Button pressed!');
+      onBackClick();
+    };
 
     const onPressFunction = () => {
       // Define the action when the button is pressed
@@ -10,7 +22,7 @@ const MapButtons = () => {
   
     return(
       <View className = "flex-col h-48 w-16 justify-around items-center ">
-        <Pressable onPress={onPressFunction}>
+        <Pressable onPress={backOnPressFunction}>
           <Image className = "h-8 w-8" source = {require("@/src/assets/images/back-button.png")} />
         </Pressable>
   

@@ -9,64 +9,102 @@ import {
   TouchableWithoutFeedback,
   Keyboard
 } from "react-native";
-import { useAuthToken } from '../contexts/AuthContext';
+import { useAuthDetails } from '../contexts/AuthContext';
 import axios, {AxiosRequestConfig} from 'axios';
+import { Picker } from '@react-native-picker/picker';
+import { FlatList } from "react-native-gesture-handler";
+import PlanPathButton from "./PlanPathButton";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
-const RouteInfoPlanning: React.FC = () => {
-  const PlanPathButton = ({ onPress, title }) => {
-    return (
-      <TouchableOpacity onPress={onPress} className="bg-[#ccfbf1] rounded-lg py-3 mt-4">
-        <Text className="text-[#334155] text-center text-lg font-bold">{title}</Text>
-      </TouchableOpacity>
-    );
-  };
+type RouteInfoPlanningnProps = {
+  onStartClick: any,
+  sendDataToParent2: any
 
-  const handleButtonPress = () => {
-    console.log("Button pressed!");
-  };
+};
+
+const RouteInfoPlanning: React.FC<RouteInfoPlanningnProps>= ({onStartClick, sendDataToParent2}) => {
+
+
+  // const handleStartClick = () => {
+  //   // Pass the startAddr and endAddr to the parent component to initiate the route
+  //   onStartClick();
+  // };
+
+  // const PlanPathButton = () => {
+
+  //   return (
+  //     <TouchableOpacity onPress={handleStartClick} className="bg-[#ccfbf1] rounded-lg py-3 mt-4">
+  //       <Text className="text-[#334155] text-center text-lg font-bold"> PLAN PATH</Text>
+  //     </TouchableOpacity>
+  //   );
+
+  //   };
+
+  // const sendDataToParent2 = (data) => {
+  //   console.log("Data Received in Parent 1:", data)
+
+
+  // };
+  
+
+  
+  
 
   const [start_Text, onChangeStartText] = useState("");
   const [end_Text, onChangeEndText] = useState("");
+  const [dataStart, setDataStart] = useState([]);
+  const [dataEnd, setDataEnd] = useState([]);
+  const[startAddr, setStartAddr] = useState([]);
+  const[endAddr, setEndAddr] = useState([]);
 
-  const getToken = useAuthToken();
+  const { getToken,getUserId, getEmail} = useAuthDetails();
   const [token, setToken] = useState('');
+  const [isStartListVisible, setStartListVisible] = useState(false);
+  const [isEndListVisible, setEndListVisible] = useState(false);
+
+
+
+
+
 
   const getStartSuggestionResponse = async () => {
     try {
-      const response = await fetch(BASE_URL + '/address-autocomplete', {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + token,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ "input_address": start_Text })
-      });
-  
-      if (!response.ok) {
-        console.error('Server responded with an error:', response.statusText);
-        return;
-      }
-  
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error('Network error:', error);
+ 
+    const response = await fetch(BASE_URL + '/address-autocomplete', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({"input_address": start_Text})
+    });
+
+    if (!response.ok) {
+      console.error('Server responded with an error:', response.statusText);
+      return;
     }
 
-  };
+    const data = await response.json();
+    console.log(data);
+    setDataStart(data);
+
+  } catch (error) {
+    console.error('Network error:', error);
+  }
+};
 
   const getEndSuggestionResponse = async () => {
 
     try {
+ 
       const response = await fetch(BASE_URL + '/address-autocomplete', {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Authorization': 'Bearer ' + token,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ "input_address": end_Text })
+        body: JSON.stringify({"input_address": end_Text})
       });
   
       if (!response.ok) {
@@ -76,6 +114,8 @@ const RouteInfoPlanning: React.FC = () => {
   
       const data = await response.json();
       console.log(data);
+      setDataEnd(data);
+  
     } catch (error) {
       console.error('Network error:', error);
     }
@@ -113,8 +153,25 @@ const RouteInfoPlanning: React.FC = () => {
               className="bg-white rounded-lg p-2 text-[#334155]"
               placeholder="Starting Address"
               value={start_Text}
-              onChangeText={onChangeStartText}
+              onChangeText={ (start_text) => {
+                onChangeStartText(start_text);
+                setStartListVisible(true);
+              }}
             />
+             {isStartListVisible && (<FlatList
+        data={dataStart}
+        keyExtractor={(item, index) => item.toString()} // Adjust this based on your API data
+        renderItem={({ item, index }) => (
+          <TouchableOpacity onPress={() => {
+            onChangeStartText(item[0]);
+            setStartAddr(item);
+            setStartListVisible(false);
+          }}
+                >
+            <Text>{item[0]}</Text>
+          </TouchableOpacity>
+        )}
+      />)}
           </View>
 
           <View className="mb-3">
@@ -123,11 +180,30 @@ const RouteInfoPlanning: React.FC = () => {
               className="bg-white rounded-lg p-2 text-[#334155]"
               placeholder="Ending Address"
               value={end_Text}
-              onChangeText={onChangeEndText}
+              onChangeText={ (end_text) => {
+                onChangeEndText(end_text);
+                setEndListVisible(true);
+              }}
             />
+            {isEndListVisible && (<FlatList
+        data={dataEnd}
+        keyExtractor={(item, index) => item.toString()} // Adjust this based on your API data
+        renderItem={({ item, index }) => (
+          <TouchableOpacity onPress={() => {
+            onChangeEndText(item[0]);
+            setEndAddr(item);
+            setEndListVisible(false);
+          }}
+                >
+            <Text>{item[0]}</Text>
+          </TouchableOpacity>
+        )}
+      />)}
           </View>
 
-          <PlanPathButton onPress={handleButtonPress} title="PLAN PATH" />
+          {/* <PlanPathButton startAddr = {startAddr} endAddr = {endAddr}/> */}
+          {/* <PlanPathButton /> */}
+          <PlanPathButton startAddr = {startAddr} endAddr = {endAddr} onStartClick = {onStartClick} sendDataToParent1={sendDataToParent2} />
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

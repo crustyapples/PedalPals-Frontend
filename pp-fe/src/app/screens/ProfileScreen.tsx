@@ -61,13 +61,57 @@ const ProfilePage: React.FC = () => {
   const [token, setToken] = useState("");
   const [email, setEmail] = useState("");
   const [userId, setUserId] = useState("");
+  // const [jsonData, setJsonData] = useState({
+  //   "_id": "",
+  //   "analytics": {
+  //     "avg_speed": 0,
+  //     "routes": [],
+  //     "total_distance": 0
+  //   },
+  //   "email": "",
+  //   "friends_list": [],
+  //   "gamification": {
+  //     "badgeCount": 0,
+  //     "badges": [],
+  //     "leadership_position": 0,
+  //     "points": 0
+  //   },
+  //   "location": {
+  //     "coordinates": "",
+  //     "gps_permission": ""
+  //   },
+  //   "name": "",
+  //   "posts": []
+  // });
+
+  
+
+  const [avgSpeed, setAvgSpeed] = useState(0);
+  const [routes, setRoutes] = useState([]);
+  const [totalDistance, setTotalDistance] = useState(0);
+  const[emailAddress, setEmailAddress] = useState("");
+  const[friendsList, setFriendsList] = useState([]);
+  const[game, setGame] = useState();
+  const [badgeCount, setBadgeCount] = useState(0);
+  const[badges, setBadges] = useState([]);
+  const [leadershipPosition, setLeadershipPosition] = useState(0);
+  const [points, setPoints] = useState(0);
+  const [coordinates, setCoordinates] = useState("");
+  const [gpsPermission, setGpsPermission] = useState("");
+  const [username, setUsername] = useState("");
+  const[posts, setPosts] = useState([]);
+
+
+
+
+
 
   const loadUserInfo = async () => {
     try {
       const response = await fetch(BASE_URL + `/users/${userId}`, {
         method: "GET",
         headers: {
-          Authorization: "Bearer " + token,
+          "Authorization": "Bearer " + token,
           "Content-Type": "application/json",
         },
       });
@@ -79,6 +123,21 @@ const ProfilePage: React.FC = () => {
 
       const data = await response.json();
       console.log(data);
+
+      setAvgSpeed(data.analytics.avg_speed);
+      setRoutes(data.analytics.routes);
+      setTotalDistance(data.analytics.total_distance);
+      setEmailAddress(data.email);
+      setFriendsList(data.friends_list);
+      // setGame(data.gamification);
+      // setBadgeCount(data.gamification.badgeCount);
+      // setLeadershipPosition(data.gamification.badges);
+      // setLeadershipPosition(data.gamification.leadership_position);
+      // setPoints(data.gamification.points);
+      setCoordinates(data.location.coordinates);
+      setGpsPermission(data.location.gps_permission);
+      setUsername(data.name);
+      setPosts(data.posts);
     }
     catch (error) {
       console.error('Authentication error', error);
@@ -111,39 +170,58 @@ const ProfilePage: React.FC = () => {
     }
   }, [token]);
 
+  // const profilePic = require("@/src/assets/images/favicon.png");
+  // const username = "thelegend27";
+  // const numOfPals = 5;
+  // const teleHandle = "@thelegend27";
+  // const instaHandle = "@thelegend27";
+  // const numOfReward1 = 5;
+  // const numOfReward2 = 2;
+  // const numOfReward3 = 23;
+  // const totalDistanceTravelled = 22.34;
+  // const averageSpeed = 66.23;
+  // const socialPostData = dummyData_UserPosts;
+
   const profilePic = require("@/src/assets/images/favicon.png");
-  const username = "thelegend27";
-  const numOfPals = 5;
   const teleHandle = "@thelegend27";
   const instaHandle = "@thelegend27";
+
+
+
+  console.log(avgSpeed);
+  console.log(routes);
+  console.log(totalDistance);
+  console.log(emailAddress);
+  console.log(friendsList);
+
+  // console.log(game);
+  // console.log(badgeCount);
+  // console.log(badges);
+  // console.log(points);
+  // console.log(leadershipPosition);
+
+  console.log(coordinates);
+  console.log(gpsPermission);
+  console.log(username);
+  console.log(posts);
+
+
+
+
   const numOfReward1 = 5;
   const numOfReward2 = 2;
   const numOfReward3 = 23;
   const totalDistanceTravelled = 22.34;
   const averageSpeed = 66.23;
-  const socialPostData = dummyData_UserPosts;
+  // const socialPostData = dummyData_UserPosts;
 
-  // const UserData =
-  // {
-  //     profilePic: require("@/src/assets/images/favicon.png"),
-  //     username: "thelegend27",
-  //     numOfPals: 5,
-  //   teleHandle: "@thelegend27",
-  //   instaHandle:"@thelegend27",
-  //   numOfReward1: 5,
-  //   numOfReward2: 2,
-  //   numOfReward3: 23,
-  //   totalDistanceTravelled: 22.34,
-  //   averageSpeed: 66.23,
-  //   socialPostData: dummyData_UserPosts
-  // }
 
   return (
     <ScrollView>
       <UserDetails
         profilePic={profilePic}
-        username={username}
-        numOfPals={numOfPals}
+        username = {username}
+        numOfPals={friendsList.length}
         teleHandle={teleHandle}
         instaHandle={instaHandle}
         numOfReward1={numOfReward1}
@@ -151,10 +229,10 @@ const ProfilePage: React.FC = () => {
         numOfReward3={numOfReward3}
       />
       <UserStats
-        totalDistanceTravelled={totalDistanceTravelled}
-        averageSpeed={averageSpeed}
+        totalDistanceTravelled={totalDistance}
+        averageSpeed={avgSpeed}
       />
-      <UserPosts socialPostData={socialPostData} />
+      <UserPosts socialPostData={dummyData_UserPosts} />
     </ScrollView>
   );
 };
