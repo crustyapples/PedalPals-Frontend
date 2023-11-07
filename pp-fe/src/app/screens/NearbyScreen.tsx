@@ -27,8 +27,9 @@ const NearbyPage: React.FC = () => {
   const [token, setToken] = useState('');
   const [userId, setUserId] = useState('');
   const [email, setEmail] = useState('');
+  const [newLocation, setNewLocation] = useState(null);
 
-  const findNearbyCyclist = async () => {
+  const findNearbyCyclist = async (location) => {
     try {
       const response = await fetch(BASE_URL + '/find-nearby-cyclists', {
         method: 'POST',
@@ -36,7 +37,7 @@ const NearbyPage: React.FC = () => {
           'Authorization': 'Bearer ' + token,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ "radius": Math.round(distance) })
+        body: JSON.stringify({ "radius": Math.round(distance), "location": location })
       });
   
       if (!response.ok) {
@@ -66,6 +67,7 @@ const NearbyPage: React.FC = () => {
               'Content-Type': 'application/json'
             }
           })
+          setNewLocation(location);
         }
       }
     } catch (error) {
@@ -93,18 +95,38 @@ const NearbyPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // const intervalId = setInterval(() => {
-    //   findNearbyCyclist();
-    // }, 1000); // 1 second
+    const getLocationAndFindNearbyCyclist = async () => {
+      const location = await getUserLocation();
+      console.log("User location:", location);
+      if(location && !newLocation){
+        // make an UPDATE call to /user/user_id to update location
+        const requestData = {
+          location: {
+            coordinates: `${location.coords.latitude},${location.coords.longitude}`,
+            gps_persmission: "Granted"
+          }
+        }
+        const response = await axios.put(BASE_URL + `/users/${userId}`, requestData, {
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+          }
+        })
+        setNewLocation(location);
+      }
+    }
 
-    // return () => clearInterval(intervalId);
     if (token) {
-      findNearbyCyclist();
+      getLocationAndFindNearbyCyclist();
     }
     
+  }, []);
+
+  useEffect(() => {
+    if (newLocation) {
+      findNearbyCyclist(`${newLocation.coords.latitude},${newLocation.coords.longitude}`);
+    }
   }, [Math.round(distance)]);
-
-
 
   return (
     <View className="bg-gray-100">
