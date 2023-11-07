@@ -96,6 +96,7 @@ const NearbyPage: React.FC = () => {
 
   useEffect(() => {
     const getLocationAndFindNearbyCyclist = async () => {
+      console.log("Getting Users Current location")
       const location = await getUserLocation();
       console.log("User location:", location);
       if(location && !newLocation){
@@ -116,6 +117,7 @@ const NearbyPage: React.FC = () => {
       }
     }
 
+
     if (token) {
       getLocationAndFindNearbyCyclist();
     }
@@ -124,6 +126,7 @@ const NearbyPage: React.FC = () => {
 
   useEffect(() => {
     if (newLocation) {
+      console.log("User location updated")
       findNearbyCyclist(`${newLocation.coords.latitude},${newLocation.coords.longitude}`);
     }
   }, [Math.round(distance)]);

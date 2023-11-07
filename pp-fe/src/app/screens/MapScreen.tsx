@@ -1,11 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { View, Text } from "react-native";
+import React, { useEffect, useState, useRef } from "react";
+import {
+  View,
+  Animated,
+  TouchableOpacity,
+  Dimensions,
+  PanResponder,
+  Pressable,
+  Image
+} from "react-native";
 import * as Location from "expo-location";
 import MapButtons from "../components/MapButtons";
 import RouteInfoPlanning from "../components/RouteInfoPlanning";
 import MapViewComponent from "../components/MapViewComponent";
 import polyline from "@mapbox/polyline";
 import StartPath from "../components/StartPath";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import RoutePosting from "../components/RoutePosting";
 
 const MapPage: React.FC = () => {
@@ -13,7 +22,41 @@ const MapPage: React.FC = () => {
   const [dataReceived, setDataReceived] = useState(false);
   const [routeSummary, setRouteSummary] = useState("");
   const [rG, setRG] = useState("");
-  // const [routeStopped, setRouteStopped] = useState(false);
+  const [isRouteInfoVisible, setIsRouteInfoVisible] = useState(true);
+  // State to manage the active/inactive status of the RouteInfoPlanning
+  const [routeInfoActive, setRouteInfoActive] = useState(false);
+
+  // Position of RouteInfoPlanning
+  const routeInfoPosAnim = useRef(
+    new Animated.Value(Dimensions.get("window").height)
+  ).current; // start off-screen
+
+  // Function to activate the RouteInfoPlanning and animate its position
+  const activateRouteInfo = () => {
+    setRouteInfoActive(true);
+
+    Animated.timing(routeInfoPosAnim, {
+      toValue: Dimensions.get("window").height / 2, // Moves to the middle of the screen
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  // Set up an Animated.Value for the X position
+  const routeInfoAnim = useRef(new Animated.Value(0)).current; // start fully visible
+
+  // Function to toggle the RouteInfoPlanning visibility
+  const toggleRouteInfo = () => {
+    // Animate the view based on isRouteInfoVisible
+    Animated.timing(routeInfoAnim, {
+      toValue: isRouteInfoVisible ? -Dimensions.get("window").width : 0, // or any other value depending on your UI
+      duration: 300, // duration of the slide animation
+      useNativeDriver: true,
+    }).start();
+
+    // After starting the animation, set the visibility to the opposite
+    setIsRouteInfoVisible(!isRouteInfoVisible);
+  };
 
   const handlePlanStartRoute = () => {
     setRoutePlanned(true);
@@ -28,7 +71,6 @@ const MapPage: React.FC = () => {
   //   setRouteStopped(true);
   // };
 
- 
   const [region, setRegion] = useState(null);
 
   const [routeCoordinates, setRouteCoordinates] = useState([]);
@@ -81,9 +123,9 @@ const MapPage: React.FC = () => {
     })();
   }, []);
 
-  // if (!region) {
-  //   return <Text>Loading...</Text>;
-  // }
+  if (!region) {
+    return <View></View>;
+  }
 
   return (
     <View className="h-screen">
@@ -93,7 +135,15 @@ const MapPage: React.FC = () => {
         <MapButtons onBackClick={handleBackButton} />
       </View>
 
-      <View className="bottom-48 inset-x-0 absolute">
+      <Animated.View
+        style={{
+          transform: [{ translateX: routeInfoAnim }],
+          position: "absolute",
+          bottom: 180, // Adjust based on where you want the view to appear
+          left: 0,
+          right: 0,
+        }}
+      >
         {routePlanned && dataReceived ? (
           <StartPath routeSummary={routeSummary} region={region} />
         ) : (
@@ -102,7 +152,21 @@ const MapPage: React.FC = () => {
             sendDataToParent2={processDataFromParent1}
           />
         )}
-      </View>
+      </Animated.View>
+      
+
+      <Pressable
+        onPress={toggleRouteInfo}
+        style={{
+          position: "absolute",
+          left: 25,
+          bottom: 450, // Adjust as necessary
+          // Add additional styling to make the touchable area visible or integrate it with your UI
+        }}
+      >
+        {isRouteInfoVisible ? <Image className = "h-8 w-8" source = {require("@/src/assets/images/hide.png")} /> : <Image className = "h-8 w-8" source = {require("@/src/assets/images/show.png")} />}
+        
+      </Pressable>
     </View>
   );
 };
