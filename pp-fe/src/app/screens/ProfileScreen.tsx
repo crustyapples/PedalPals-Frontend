@@ -7,6 +7,7 @@ import { Text, View, ScrollView, Alert } from "react-native";
 import UserDetails from "../components/UserDetails";
 import UserStats from "../components/UserStats";
 import UserPosts from "../components/UserPosts";
+// import UserPosts2 from "../components/UserPosts2";
 import { useAuthDetails } from "../contexts/AuthContext";
 
 const dummyData_UserPosts = [
@@ -101,6 +102,8 @@ const ProfilePage: React.FC = () => {
   const [username, setUsername] = useState("");
   const[posts, setPosts] = useState([]);
 
+  const[userData, setUserData] = useState();
+
 
 
 
@@ -123,17 +126,19 @@ const ProfilePage: React.FC = () => {
 
       const data = await response.json();
       console.log(data);
+      setUserData(data);
 
       setAvgSpeed(data.analytics.avg_speed);
       setRoutes(data.analytics.routes);
       setTotalDistance(data.analytics.total_distance);
       setEmailAddress(data.email);
       setFriendsList(data.friends_list);
+
       // setGame(data.gamification);
       // setBadgeCount(data.gamification.badgeCount);
-      // setLeadershipPosition(data.gamification.badges);
       // setLeadershipPosition(data.gamification.leadership_position);
       // setPoints(data.gamification.points);
+
       setCoordinates(data.location.coordinates);
       setGpsPermission(data.location.gps_permission);
       setUsername(data.name);
@@ -164,11 +169,16 @@ const ProfilePage: React.FC = () => {
     fetchDetails();
   }, []);
 
+
   useEffect(() => {
-    if (token) {
+    if (token && userId) {
       loadUserInfo();
     }
-  }, [token]);
+  }, [token, userId]);
+
+  // console.log("this is user data",userData);
+
+
 
   // const profilePic = require("@/src/assets/images/favicon.png");
   // const username = "thelegend27";
@@ -188,11 +198,11 @@ const ProfilePage: React.FC = () => {
 
 
 
-  console.log(avgSpeed);
-  console.log(routes);
-  console.log(totalDistance);
-  console.log(emailAddress);
-  console.log(friendsList);
+  // console.log(avgSpeed);
+  // console.log(routes);
+  // console.log(totalDistance);
+  // console.log(emailAddress);
+  // console.log(friendsList);
 
   // console.log(game);
   // console.log(badgeCount);
@@ -200,10 +210,10 @@ const ProfilePage: React.FC = () => {
   // console.log(points);
   // console.log(leadershipPosition);
 
-  console.log(coordinates);
-  console.log(gpsPermission);
-  console.log(username);
-  console.log(posts);
+  // console.log(coordinates);
+  // console.log(gpsPermission);
+  // console.log(username);
+  // console.log(posts);
 
 
 
@@ -233,6 +243,7 @@ const ProfilePage: React.FC = () => {
         averageSpeed={avgSpeed}
       />
       <UserPosts socialPostData={dummyData_UserPosts} />
+      {/* <UserPosts2 socialPostData={posts} /> */}
     </ScrollView>
   );
 };

@@ -73,8 +73,10 @@ const PlanPathButton: React.FC<PlanPathButtonProps> = ({startAddr, endAddr, send
           const string_data = JSON.stringify(data);
           console.log(string_data);
           const trimmed_data = string_data.trim();
-        //   console.log(trimmed_data);
+          console.log("This is data from reverse geo", trimmed_data);
           setStartLocationResponse(trimmed_data);
+
+          return { isSuccessful: true, data};
       
         } catch (error) {
           console.error('Network error:', error);
@@ -103,8 +105,10 @@ const PlanPathButton: React.FC<PlanPathButtonProps> = ({startAddr, endAddr, send
               console.log(data);
               const string_data = JSON.stringify(data);
               const trimmed_data = string_data.trim();
-            //   console.log(trimmed_data);
+              console.log("This is data from reverse geo", trimmed_data);
               setEndLocationResponse(trimmed_data);
+
+              return { isSuccessful: true, data};
           
             } catch (error) {
           console.error('Network error:', error);
@@ -133,7 +137,7 @@ const PlanPathButton: React.FC<PlanPathButtonProps> = ({startAddr, endAddr, send
               }
           
               const data = await response.json();
-              console.log(data);
+              console.log("this is data from getRoute",data);
               setDataToSendParent1(data);
 
             
@@ -161,11 +165,17 @@ const PlanPathButton: React.FC<PlanPathButtonProps> = ({startAddr, endAddr, send
   const fetchData = async () => {
     try {
       // Call the first async function
-      await reverseGeoStart();
+      const startResult = await reverseGeoStart();
       // Call the second async function
-      await reverseGeoEnd();
+      if (startResult.isSuccessful) {
+        const endResult = await reverseGeoEnd();
+
+        if (endResult.isSuccessful) {
+            await getRoute();
+        }
+      }
       // Once the first two functions have completed, call the third async function
-      await getRoute();
+      
     } catch (error) {
       console.error('Error:', error);
     }
@@ -173,8 +183,6 @@ const PlanPathButton: React.FC<PlanPathButtonProps> = ({startAddr, endAddr, send
       
 
     const handleButtonPress = () => {
-
-        console.log("Button pressed!");
         fetchData();
         onStartClick();
         sendDataToParent1OnClick();

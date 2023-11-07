@@ -17,13 +17,13 @@ import PlanPathButton from "./PlanPathButton";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
-type RouteInfoPlanningnProps = {
+type RouteInfoPlanningProps = {
   onStartClick: any,
   sendDataToParent2: any
 
 };
 
-const RouteInfoPlanning: React.FC<RouteInfoPlanningnProps>= ({onStartClick, sendDataToParent2}) => {
+const RouteInfoPlanning: React.FC<RouteInfoPlanningProps>= ({onStartClick, sendDataToParent2}) => {
 
 
   // const handleStartClick = () => {
@@ -133,9 +133,13 @@ const RouteInfoPlanning: React.FC<RouteInfoPlanningnProps>= ({onStartClick, send
   }, []);
 
   useEffect(() => {
+    if (start_Text.trim() !== '') {
+      getStartSuggestionResponse();
+    }
 
-    getStartSuggestionResponse();
-    getEndSuggestionResponse();
+    if (end_Text.trim() !== '') {
+      getEndSuggestionResponse();
+    }
   }, [start_Text, end_Text]);
 
 
@@ -160,7 +164,7 @@ const RouteInfoPlanning: React.FC<RouteInfoPlanningnProps>= ({onStartClick, send
             />
              {isStartListVisible && (<FlatList
         data={dataStart}
-        keyExtractor={(item, index) => item.toString()} // Adjust this based on your API data
+        keyExtractor={(item, index) => item.toString()} 
         renderItem={({ item, index }) => (
           <TouchableOpacity onPress={() => {
             onChangeStartText(item[0]);
@@ -187,7 +191,7 @@ const RouteInfoPlanning: React.FC<RouteInfoPlanningnProps>= ({onStartClick, send
             />
             {isEndListVisible && (<FlatList
         data={dataEnd}
-        keyExtractor={(item, index) => item.toString()} // Adjust this based on your API data
+        keyExtractor={(item, index) => item.toString()} 
         renderItem={({ item, index }) => (
           <TouchableOpacity onPress={() => {
             onChangeEndText(item[0]);
