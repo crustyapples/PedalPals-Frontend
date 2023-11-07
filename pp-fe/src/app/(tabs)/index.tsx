@@ -1,26 +1,10 @@
-import { StyleSheet } from 'react-native';
 
-import EditScreenInfo from '../components/EditScreenInfo';
-// import { Text, View } from '../../components/Themed';
 import { Text, View } from 'react-native';
-import { useAuthToken } from '../contexts/AuthContext';
-import { useEffect, useState } from 'react';
+
 import HomePage from '../screens/HomeScreen';
 
 export default function HomeTab() {
-  const getToken = useAuthToken();
-  const [token, setToken] = useState('');
 
-  useEffect(() => {
-    const fetchToken = async () => {
-      const token = await getToken();
-      console.log('Token:', token);
-      setToken(token);
-      // Now you can use the token for API calls or other purposes
-    };
-
-    fetchToken();
-  }, []);
 
   return (
     <View className='flex justify-center'>
