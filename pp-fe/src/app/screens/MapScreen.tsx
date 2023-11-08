@@ -158,7 +158,7 @@ const MapPage: React.FC = () => {
       
       {routeStopped ? (
             <View>
-              <RoutePosting distance = {distanceTravelled} time = {timeTaken} routeData={routeData} routeId = {""} />
+              <RoutePosting distance = {distanceTravelled} time = {timeTaken} routeData={routeData} routeId = {routeId} />
             </View>
           ):
           (

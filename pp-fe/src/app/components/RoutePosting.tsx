@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import * as Location from 'expo-location';
 import MapButtons from './MapButtons';
 import RouteInfoPlanning from './RouteInfoPlanning';
@@ -29,43 +29,64 @@ const RoutePosting: React.FC<RoutePostingProps> = ({distance, time, routeData, r
 
 
 
-    // const PostRoute = async () => {
-    //     try {
+    const PostRoute = async () => {
+        try {
 
-    //         const response = await fetch(BASE_URL + "/post-route", {
-    //             method: "POST",
-    //             headers: {
-    //               Authorization: "Bearer " + token,
-    //               "Content-Type": "application/json",
-    //             },
-    //             body: JSON.stringify({
-                
-    //              }),
-    //           });
+            const response = await fetch(BASE_URL + "/post-route", {
+                method: "POST",
+                headers: {
+                  Authorization: "Bearer " + token,
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    "caption": caption,
+                    "route": routeId
+                 }),
+              });
         
-    //           if (!response.ok) {
-    //             console.error("Server responded with an error:", response.statusText);
-    //             return;
-    //           }
+              if (!response.ok) {
+                console.error("Server responded with an error:", response.statusText);
+                return;
+              }
         
-    //           const data = await response.json();
-    //           console.log(data);
+              const data = await response.json();
+              console.log(data);
 
-    //     }catch(error){
+        }catch(error){
+            console.error("Error:", error);
 
-    //     }
+        }
 
-    // };
+    };
 
-    // useEffect(() => {
-    //     const fetchToken = async () => {
-    //       const token = await getToken();
-    //       console.log("Token:", token);
-    //       setToken(token);
-    //     };
+
     
-    //     fetchToken();
-    //   }, []);
+  const PostButton = () => {
+    const handleButtonPress = async () => {
+    //   console.log('Button pressed!');
+    await PostRoute();
+
+    };
+    return (
+      <TouchableOpacity onPress={handleButtonPress}>
+        <View className="bg-[#d1d5db] text-left h-16 w-24 justify-center">
+          <Text className="text-[#334155]  text-center font-Poppins_Bold ">
+            Post Now
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+    useEffect(() => {
+        const fetchToken = async () => {
+          const token = await getToken();
+          console.log("Token:", token);
+          setToken(token);
+        };
+    
+        fetchToken();
+      }, []);
 
 return(
 
@@ -74,23 +95,26 @@ return(
         <Text>{time}</Text>
         <Text>{distance}</Text>
         {/* <Text>{routeCoordinates}</Text> */}
+        
 
         
 
 
         <TextInput
-                className="bg-white rounded-lg p-2 text-[#334155]"
+                className="bg-white rounded-lg p-2 m-2 text-[#334155]"
                 placeholder="How'd it go? Share more about your activity to your pals!"
                 value={caption}
-                onChangeText={(end_text) => {
+                onChangeText={(caption) => {
                     setCaption(caption);
                 }}
                 />
-
-
-
-    </View>
+        <View className = "mt-32">
+            <View className = "flex  justify-center items-center bottom-0">
+                <PostButton />
+            </View>
+        </View>
     
+    </View>
 
 
 );
