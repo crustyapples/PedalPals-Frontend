@@ -20,14 +20,24 @@ import { FontAwesome } from "@expo/vector-icons";
 type StartPathProps = {
   routeSummary: any;
   region: any;
+  onStopClick: () => void;
+  routeData: any;
+  sendDistanceToMapScreen: any;
+  sendTimeToMapScreen: any;
+  sendRouteIdToMapScreen: any;
 };
 
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
-const StartPath: React.FC<StartPathProps> = ({ routeSummary, region }) => {
+const StartPath: React.FC<StartPathProps> = ({ routeSummary, region, onStopClick, sendDistanceToMapScreen, sendTimeToMapScreen, routeData, sendRouteIdToMapScreen}) => {
   // const [startPoint, setStartPoint] = useState("");
   // const [endPoint, setEndPoint] = useState ("");
+//   const [acceptingRoute, setAcceptingRoute] = useState(false); // Add this state
+
+
   const [totalDistance, setTotalDistance] = useState(0);
+  const [routeId, setRouteId] = useState("");
+//   const [random, setRandom] = useState("");
 
   const { getToken, getUserId, getEmail } = useAuthDetails();
   const [token, setToken] = useState("");
@@ -117,15 +127,39 @@ const StartPath: React.FC<StartPathProps> = ({ routeSummary, region }) => {
     );
   };
 
+  const fetchData = async () => {
+    try {
+        const routeIdData = await AcceptRoute();
+        setRouteId(routeIdData);
+        console.log("set routeid:", routeId);
+        sendDistanceToMapScreen(totalDistance);
+        sendRouteIdToMapScreen(routeId);
+        sendTimeToMapScreen(seconds);
+        onStopClick();
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+
   const StopButton = () => {
-    const handleButtonPress = () => {
+    const handleButtonPress =  () => {
       // Define the action when the button is pressed
       // console.log('Button pressed!');
+      
       pauseTimer();
+      fetchData();
       setStopClicked(true);
+
+
+
+
+
+
+
     };
     return (
-      <TouchableOpacity onPress={handleButtonPress}>
+      <TouchableOpacity onPress={handleButtonPress} >
         <View className="bg-[#fca5a5] rounded-full text-left h-16 w-16 justify-center">
           <Text className="text-[#334155] text-center font-Poppins_Bold ">
             STOP
@@ -170,6 +204,46 @@ const StartPath: React.FC<StartPathProps> = ({ routeSummary, region }) => {
       </TouchableOpacity>
     );
   };
+
+
+  const AcceptRoute = async () => {
+    try {
+
+        const response = await fetch(BASE_URL + "/accept-route", {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                "route_geometry": routeData.route_geometry,
+                "route_instructions": routeData.route_instructions,
+                "route_name": routeData.route_name,
+                "route_summary": routeData.route_summary,
+                "status": routeData.status
+             }),
+          });
+    
+          if (!response.ok) {
+            console.error("Server responded with an error:", response.statusText);
+            return;
+          }
+    
+          const data = await response.json();
+          console.log("Output from Accept Route:", data);
+
+
+          return data.route_id;
+
+
+ 
+
+    }catch(error){
+        console.error("Network error:", error);
+    }
+
+};
+
 
   const getRoute = async () => {
     try {
@@ -224,6 +298,9 @@ const StartPath: React.FC<StartPathProps> = ({ routeSummary, region }) => {
   // setEndPoint(routeSummary.end_point);
   // setRouteDistance(routeSummary.total_distance)
 
+
+
+
   useEffect(() => {
     return () => {
       if (timerId) {
@@ -258,6 +335,8 @@ const StartPath: React.FC<StartPathProps> = ({ routeSummary, region }) => {
   useEffect(() => {
     getRoute();
   }, [endData]);
+
+
 
   return (
     <View className="bg-[#2dd4bf] h-64 rounded-t-xl rounded-b-xl flex-col justify-start pl-4 pr-4">

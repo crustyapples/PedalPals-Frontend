@@ -21,10 +21,16 @@ const MapPage: React.FC = () => {
   const [routePlanned, setRoutePlanned] = useState(false);
   const [dataReceived, setDataReceived] = useState(false);
   const [routeSummary, setRouteSummary] = useState("");
+  const [routeData, setRouteData] = useState();
   const [rG, setRG] = useState("");
+  const [routeStopped, setRouteStopped] = useState(false);
   const [isRouteInfoVisible, setIsRouteInfoVisible] = useState(true);
+  const [distanceTravelled, setDistanceTravelled]  =useState(0);
+  const[timeTaken, setTimeTaken] = useState(0);
+  const[routeId, setRouteId] = useState("");
   // State to manage the active/inactive status of the RouteInfoPlanning
   const [routeInfoActive, setRouteInfoActive] = useState(false);
+
 
   // Position of RouteInfoPlanning
   const routeInfoPosAnim = useRef(
@@ -67,9 +73,9 @@ const MapPage: React.FC = () => {
     setDataReceived(false);
   };
 
-  // const handleStopRoute = () => {
-  //   setRouteStopped(true);
-  // };
+  const handleStopRoute = () => {
+    setRouteStopped(true);
+  };
 
   const [region, setRegion] = useState(null);
 
@@ -78,6 +84,8 @@ const MapPage: React.FC = () => {
   const processDataFromParent1 = (data) => {
     console.log("Data Received in Parent 2:", data);
     if (data && data.route_geometry && data.route_summary) {
+      setRouteData(data);
+      console.log("This is route data from parent 1", routeData);
       setRG(data.route_geometry);
       setRouteSummary(data.route_summary);
       setDataReceived(true);
@@ -98,6 +106,24 @@ const MapPage: React.FC = () => {
   };
 
   console.log("This is the route summary", routeSummary);
+
+
+  // console.log("This is route data from parent 1", routeData);
+
+  // console.log("This is the route Id from StartPath", routeId)
+  const processDistanceFromStartPath = (distance) => {
+    console.log("Distance Travelled:", distance);
+    setDistanceTravelled(distance);
+  };
+
+  const processTimeFromStartPath = (time) => {
+    console.log("Time taken:", time);
+    setTimeTaken(time);
+  };
+
+  const processRouteIdFromStartPath = (routeId) => {
+    setRouteId(routeId);
+  }
 
   useEffect(() => {
     (async () => {
@@ -129,33 +155,41 @@ const MapPage: React.FC = () => {
 
   return (
     <View className="h-screen">
-      <MapViewComponent region={region} routeCoordinates={routeCoordinates} />
-
-      <View className="absolute top-0 left-0">
-        <MapButtons onBackClick={handleBackButton} />
-      </View>
-
-      <Animated.View
-        style={{
-          transform: [{ translateX: routeInfoAnim }],
-          position: "absolute",
-          bottom: 180, // Adjust based on where you want the view to appear
-          left: 0,
-          right: 0,
-        }}
-      >
-        {routePlanned && dataReceived ? (
-          <StartPath routeSummary={routeSummary} region={region} />
-        ) : (
-          <RouteInfoPlanning
-            onStartClick={handlePlanStartRoute}
-            sendDataToParent2={processDataFromParent1}
-          />
-        )}
-      </Animated.View>
       
+      {routeStopped ? (
+            <View>
+              <RoutePosting distance = {distanceTravelled} time = {timeTaken} routeData={routeData} routeId = {""} />
+            </View>
+          ):
+          (
+          <View  className="h-screen">
+            <MapViewComponent region={region} routeCoordinates={routeCoordinates}  />
 
-      <Pressable
+            <View className="absolute top-0 left-0">
+              <MapButtons onBackClick={handleBackButton} />
+            </View>
+
+            <Animated.View
+              style={{
+                transform: [{ translateX: routeInfoAnim }],
+                position: "absolute",
+                bottom: 180, // Adjust based on where you want the view to appear
+                left: 0,
+                right: 0,
+              }}
+            >
+              {routePlanned && dataReceived ? (
+                <StartPath routeSummary={routeSummary} region={region} onStopClick = {handleStopRoute} sendDistanceToMapScreen = {processDistanceFromStartPath} sendTimeToMapScreen = {processTimeFromStartPath} routeData={routeData} sendRouteIdToMapScreen = {processRouteIdFromStartPath}/>
+              ) : (
+                <RouteInfoPlanning
+                  onStartClick={handlePlanStartRoute}
+                  sendDataToParent2={processDataFromParent1}
+                />
+              )}
+            </Animated.View>
+
+
+            <Pressable
         onPress={toggleRouteInfo}
         style={{
           position: "absolute",
@@ -167,6 +201,15 @@ const MapPage: React.FC = () => {
         {isRouteInfoVisible ? <Image className = "h-8 w-8" source = {require("@/src/assets/images/hide.png")} /> : <Image className = "h-8 w-8" source = {require("@/src/assets/images/show.png")} />}
         
       </Pressable>
+
+          </View> 
+          )
+        }
+        
+          
+      
+
+
     </View>
   );
 };
