@@ -1,6 +1,3 @@
-import { StyleSheet } from "react-native";
-
-import EditScreenInfo from "../components/EditScreenInfo";
 import { Text, View, Image } from "react-native";
 
 type RouteCardProps = {
@@ -9,27 +6,22 @@ type RouteCardProps = {
   distance: number;
 };
 
-const RouteCard: React.FC<RouteCardProps> = ({
-  routeName,
-  mapImage,
-  distance,
-}) => {
+const RouteCard: React.FC<RouteCardProps> = ({ routeName, mapImage, distance }) => {
   return (
-    <View className="flex-col p-4 bg-white shadow-md rounded-lg w-1/2 m-1">
-      <Text className="text-center font-Poppins_Bold text-black">
+    <View className="flex-col items-center p-4 bg-white shadow-lg rounded-lg w-1/2 m-1">
+      <Text className="text-center font-Poppins_Bold text-lg text-black mb-2">
         {routeName}
       </Text>
 
-      <View className="flex-row  items-center justify-center mt-1">
-        <Image
-          source={mapImage}
-          className="h-16 w-32 rounded-t-2xl rounded-b-2xl"
-        />
+      <View className="flex-row items-center justify-center mb-3">
+      <View className="bg-gray-200 w-full h-40 mt-2 rounded-lg mb-2" />
       </View>
 
-      <View className="flex-col">
-        <Text className="font-Poppins_Light">Distance</Text>
-        <Text className="font-Poppins_Medium">{distance}</Text>
+      <View className="flex-col items-center">
+        <Text className="font-Poppins_Light text-sm text-gray-600">Distance</Text>
+        <Text className="font-Poppins_Medium text-md text-gray-800">
+          {`${distance} km`}
+        </Text>
       </View>
     </View>
   );

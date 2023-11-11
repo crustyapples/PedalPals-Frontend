@@ -79,13 +79,7 @@ const RoutePage: React.FC = () => {
 
   return (
     <View className="flex items-center mt-5">
-      {/* <FlatList
-        data={dummyData}
-        numColumns={2}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        // ItemSeparatorComponent = {this.FlatListItemSeparator}
-      /> */}
+
 
       {
         Array.from({ length: Math.ceil(dummyData.length / 2) }).map(
@@ -108,12 +102,6 @@ const RoutePage: React.FC = () => {
         )
       }
 
-                {/* {Array.from({ length: Math.ceil(usersData.length / 2) }).map((_, index) => (
-            <View key={index} className="flex-row justify-between mb-4">
-              <UserItem user={usersData[index * 2]} />
-              {usersData[index * 2 + 1] && <UserItem user={usersData[index * 2 + 1]} />}
-            </View>
-          ))} */}
     </View>
   );
 };

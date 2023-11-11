@@ -1,5 +1,5 @@
 import React from "react";
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, RefreshControl} from "react-native";
 import PostCard from "@/src/app/components/PostCard";
 import { useAuthDetails } from "../contexts/AuthContext";
 import { useEffect, useState } from "react";
@@ -22,56 +22,49 @@ type Post = {
   _id: string;
   caption: string;
   comments: any;
-  likes: number;
+  likes: any;
   route: Route;
   timestamp: string;
   user: string;
 }
 
 const HomePage: React.FC = () => {
-  const { getToken, getEmail, getUserId } = useAuthDetails();
+  const { getToken, getUserId } = useAuthDetails();
   const [token, setToken] = useState("");
   const [userId, setUserId] = useState("");
   const [posts, setPosts] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const loadPosts = async (userId) => {
     try {
-      const response = await fetch(BASE_URL + `/posts`, {
+      const response = await fetch(`${BASE_URL}/posts`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
       });
-  
+
       if (!response.ok) {
         console.error("Server responded with an error:", response.statusText);
         return;
       }
+
       const data = await response.json();
-
-      // filter through data for all posts that are not from userId
-
-      const filteredData = data.filter((post) => post.user_id!== userId);
-
+      const filteredData = data.filter((post) => post.user_id !== userId);
+      console.log(filteredData);
       setPosts(filteredData);
-      console.log(posts);
-
     } catch (error) {
-      console.error("Authentication error", error);
+      console.error("Network error", error);
     }
   };
 
   useEffect(() => {
     const fetchDetails = async () => {
-      const token = await getToken();
-      const user_id = await getUserId();
+      const fetchedToken = await getToken();
+      const fetchedUserId = await getUserId();
 
-      console.log("Token:", token);
-      console.log("User ID:", user_id);
-
-      setToken(token);
-      setUserId(user_id);
-
+      setToken(fetchedToken);
+      setUserId(fetchedUserId);
     };
 
     fetchDetails();
@@ -83,12 +76,19 @@ const HomePage: React.FC = () => {
     }
   }, [token, userId]);
 
-  
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    loadPosts(userId).then(() => setRefreshing(false));
+  }, [userId]);
 
   return (
-    <ScrollView>
-      {posts.map((cycle, index) => (
-        <PostCard key={index} {...cycle} />
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      {posts.map((post, index) => (
+        <PostCard key={index} {...post} />
       ))}
     </ScrollView>
   );
