@@ -56,7 +56,9 @@ const PlanPathButton: React.FC<PlanPathButtonProps> = ({
   };
 
   const getRoute = async (start: string, end: string) => {
+    console.log("Getting Route");
     try {
+      console.log("Inside try block");
       const response = await fetch(BASE_URL + "/get-route", {
         method: "POST",
         headers: {
@@ -96,6 +98,8 @@ const PlanPathButton: React.FC<PlanPathButtonProps> = ({
     try {
       const startResult = await reverseGeo(start_place_id);
       const endResult = await reverseGeo(end_place_id);
+      console.log("This is start result", startResult);
+      console.log("This is end result", endResult);
       getRoute(startResult.trimmed_data, endResult.trimmed_data);
     } catch (error) {
       console.error("Error:", error);

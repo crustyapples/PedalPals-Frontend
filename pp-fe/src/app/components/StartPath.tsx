@@ -29,15 +29,22 @@ type StartPathProps = {
 
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
-const StartPath: React.FC<StartPathProps> = ({ routeSummary, region, onStopClick, sendDistanceToMapScreen, sendTimeToMapScreen, routeData, sendRouteIdToMapScreen}) => {
+const StartPath: React.FC<StartPathProps> = ({
+  routeSummary,
+  region,
+  onStopClick,
+  sendDistanceToMapScreen,
+  sendTimeToMapScreen,
+  routeData,
+  sendRouteIdToMapScreen,
+}) => {
   // const [startPoint, setStartPoint] = useState("");
   // const [endPoint, setEndPoint] = useState ("");
-//   const [acceptingRoute, setAcceptingRoute] = useState(false); // Add this state
-
+  //   const [acceptingRoute, setAcceptingRoute] = useState(false); // Add this state
 
   const [totalDistance, setTotalDistance] = useState(0);
   const [routeId, setRouteId] = useState("");
-//   const [random, setRandom] = useState("");
+  //   const [random, setRandom] = useState("");
 
   const { getToken, getUserId, getEmail } = useAuthDetails();
   const [token, setToken] = useState("");
@@ -129,37 +136,32 @@ const StartPath: React.FC<StartPathProps> = ({ routeSummary, region, onStopClick
 
   const fetchData = async () => {
     try {
-        const routeIdData = await AcceptRoute();
+      AcceptRoute().then((routeIdData) => {
         setRouteId(routeIdData);
-        console.log("set routeid:", routeId);
+        console.log("set routeid:", routeIdData);
         sendDistanceToMapScreen(totalDistance);
-        sendRouteIdToMapScreen(routeId);
+        sendRouteIdToMapScreen(routeIdData);
         sendTimeToMapScreen(seconds);
-        onStopClick();
+        setStopClicked(true);
+        onStopClick();        
+      })
+      
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-
   const StopButton = () => {
-    const handleButtonPress =  () => {
+    const handleButtonPress = () => {
       // Define the action when the button is pressed
       // console.log('Button pressed!');
-      
+
       pauseTimer();
       fetchData();
-      setStopClicked(true);
-
-
-
-
-
-
-
+      
     };
     return (
-      <TouchableOpacity onPress={handleButtonPress} >
+      <TouchableOpacity onPress={handleButtonPress}>
         <View className="bg-[#fca5a5] rounded-full text-left h-16 w-16 justify-center">
           <Text className="text-[#334155] text-center font-Poppins_Bold ">
             STOP
@@ -205,69 +207,20 @@ const StartPath: React.FC<StartPathProps> = ({ routeSummary, region, onStopClick
     );
   };
 
-
   const AcceptRoute = async () => {
     try {
-
-        const response = await fetch(BASE_URL + "/accept-route", {
-            method: "POST",
-            headers: {
-              Authorization: "Bearer " + token,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                "route_geometry": routeData.route_geometry,
-                "route_instructions": routeData.route_instructions,
-                "route_name": routeData.route_name,
-                "route_summary": routeData.route_summary,
-                "status": routeData.status
-             }),
-          });
-    
-          if (!response.ok) {
-            console.error("Server responded with an error:", response.statusText);
-            return;
-          }
-    
-          const data = await response.json();
-          console.log("Output from Accept Route:", data);
-
-
-          return data.route_id;
-
-
- 
-
-    }catch(error){
-        console.error("Network error:", error);
-    }
-
-};
-
-
-  const getRoute = async () => {
-    try {
-      const string_data_start = JSON.stringify([
-        startData.latitude,
-        startData.longitude,
-      ]);
-      const trimmed_data_start = string_data_start.trim();
-
-      const string_data_end = JSON.stringify([
-        endData.latitude,
-        endData.longitude,
-      ]);
-      const trimmed_data_end = string_data_end.trim();
-
-      const response = await fetch(BASE_URL + "/get-route", {
+      const response = await fetch(BASE_URL + "/accept-route", {
         method: "POST",
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          start_address: trimmed_data_start.slice(1, -1),
-          end_address: trimmed_data_end.slice(1, -1),
+          route_geometry: routeData.route_geometry,
+          route_instructions: routeData.route_instructions,
+          route_name: routeData.route_name,
+          route_summary: routeData.route_summary,
+          status: routeData.status,
         }),
       });
 
@@ -277,29 +230,13 @@ const StartPath: React.FC<StartPathProps> = ({ routeSummary, region, onStopClick
       }
 
       const data = await response.json();
-      console.log(data);
-      setTotalDistance(data.route_summary.total_distance + totalDistance);
+      console.log("Output from Accept Route:", data);
 
-      setStartData(endData);
+      return data.route_id;
     } catch (error) {
       console.error("Network error:", error);
     }
   };
-
-  //   setEndData(
-  //     {
-  //         latitude: 1.3788984,
-  //         longitude:  103.7526191,
-  //     }
-  //   )
-
-  // console.log("This is the start point",routeSummary.start_point);
-  // setStartPoint(routeSummary.start_point);
-  // setEndPoint(routeSummary.end_point);
-  // setRouteDistance(routeSummary.total_distance)
-
-
-
 
   useEffect(() => {
     return () => {
@@ -332,18 +269,16 @@ const StartPath: React.FC<StartPathProps> = ({ routeSummary, region, onStopClick
     return () => clearInterval(intervalId);
   }, [region]); // Ensure the effect runs when data changes
 
-  useEffect(() => {
-    getRoute();
-  }, [endData]);
-
-
+  // useEffect(() => {
+  //   getRoute();
+  // }, [endData]);
 
   return (
     <View className="bg-[#2dd4bf] h-64 rounded-t-xl rounded-b-xl flex-col justify-start pl-4 pr-4">
       <View className=" flex-row justify-between bg-[#ccfbf1] rounded-t-xl rounded-b-xl mt-4 ">
         <View className="flex-col ">
           <View className="flex-row p-4">
-          <FontAwesome name="map-marker" size={25} color="black" />
+            <FontAwesome name="map-marker" size={25} color="black" />
 
             <View className="flex-col pl-2">
               <Text className="text-sm font-Poppins_Bold">Start</Text>
@@ -355,7 +290,7 @@ const StartPath: React.FC<StartPathProps> = ({ routeSummary, region, onStopClick
           </View>
 
           <View className="flex-row p-4">
-          <FontAwesome name="map-marker" size={25} color="black" />
+            <FontAwesome name="map-marker" size={25} color="black" />
 
             <View className="flex-col pl-2">
               <Text className="text-sm font-Poppins_Bold">End</Text>
@@ -380,7 +315,7 @@ const StartPath: React.FC<StartPathProps> = ({ routeSummary, region, onStopClick
           </View>
 
           <View className="flex-row justify-around w-28">
-          <FontAwesome name="hourglass" size={25} color="black" />
+            <FontAwesome name="hourglass" size={25} color="black" />
 
             <Text className="text-2xl font-Poppins_Regular">
               {formatTime(seconds)}

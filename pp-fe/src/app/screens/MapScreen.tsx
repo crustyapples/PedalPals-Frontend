@@ -6,7 +6,8 @@ import {
   Dimensions,
   PanResponder,
   Pressable,
-  Image
+  Image,
+  Keyboard,
 } from "react-native";
 import * as Location from "expo-location";
 import MapButtons from "../components/MapButtons";
@@ -25,12 +26,43 @@ const MapPage: React.FC = () => {
   const [rG, setRG] = useState("");
   const [routeStopped, setRouteStopped] = useState(false);
   const [isRouteInfoVisible, setIsRouteInfoVisible] = useState(true);
-  const [distanceTravelled, setDistanceTravelled]  =useState(0);
-  const[timeTaken, setTimeTaken] = useState(0);
-  const[routeId, setRouteId] = useState("");
+  const [distanceTravelled, setDistanceTravelled] = useState(0);
+  const [timeTaken, setTimeTaken] = useState(0);
+  const [routeId, setRouteId] = useState("");
   // State to manage the active/inactive status of the RouteInfoPlanning
   const [routeInfoActive, setRouteInfoActive] = useState(false);
+  const [keyboardOffset, setKeyboardOffset] = useState(0);
 
+  const postSetPlanned = (state) => {
+    setRoutePlanned(state);
+  }
+
+  const postSetStopped = (state) => {
+    setRouteStopped(state);
+  }
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      (e) => {
+        // Adjust the offset calculation as needed for your UI
+        let offset = e.endCoordinates.height;
+        setKeyboardOffset(offset);
+      }
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardOffset(0);
+      }
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
 
   // Position of RouteInfoPlanning
   const routeInfoPosAnim = useRef(
@@ -107,7 +139,6 @@ const MapPage: React.FC = () => {
 
   console.log("This is the route summary", routeSummary);
 
-
   // console.log("This is route data from parent 1", routeData);
 
   // console.log("This is the route Id from StartPath", routeId)
@@ -123,7 +154,7 @@ const MapPage: React.FC = () => {
 
   const processRouteIdFromStartPath = (routeId) => {
     setRouteId(routeId);
-  }
+  };
 
   useEffect(() => {
     (async () => {
@@ -135,16 +166,8 @@ const MapPage: React.FC = () => {
 
       let location = await Location.getCurrentPositionAsync({});
       setRegion({
-        // latitude: location.coords.latitude,
-        // longitude: location.coords.longitude,
-        latitude: 1.3504469,
-        longitude: 103.6857324,
-        // latitude: 1.3504500,
-        // longitude:  103.685799,
-        // latitude: 1.3504515,
-        // longitude:  103.685810,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
       });
     })();
   }, []);
@@ -155,61 +178,77 @@ const MapPage: React.FC = () => {
 
   return (
     <View className="h-screen">
-      
       {routeStopped ? (
-            <View>
-              <RoutePosting distance = {distanceTravelled} time = {timeTaken} routeData={routeData} routeId = {routeId} />
-            </View>
-          ):
-          (
-          <View  className="h-screen">
-            <MapViewComponent region={region} routeCoordinates={routeCoordinates}  />
+        <View>
+          <RoutePosting
+            distance={distanceTravelled}
+            time={timeTaken}
+            routeData={routeData}
+            routeId={routeId}
+            setRoutePlanned={postSetPlanned}
+            setRouteStopped={postSetStopped}
+          />
+        </View>
+      ) : (
+        <View className="h-screen">
+          <MapViewComponent
+            region={region}
+            routeCoordinates={routeCoordinates}
+          />
 
-            <View className="absolute top-0 left-0">
-              <MapButtons onBackClick={handleBackButton} />
-            </View>
+          <View className="absolute top-0 left-0">
+            <MapButtons onBackClick={handleBackButton} />
+          </View>
 
-            <Animated.View
-              style={{
-                transform: [{ translateX: routeInfoAnim }],
-                position: "absolute",
-                bottom: 180, // Adjust based on where you want the view to appear
-                left: 0,
-                right: 0,
-              }}
-            >
-              {routePlanned && dataReceived ? (
-                <StartPath routeSummary={routeSummary} region={region} onStopClick = {handleStopRoute} sendDistanceToMapScreen = {processDistanceFromStartPath} sendTimeToMapScreen = {processTimeFromStartPath} routeData={routeData} sendRouteIdToMapScreen = {processRouteIdFromStartPath}/>
-              ) : (
-                <RouteInfoPlanning
-                  onStartClick={handlePlanStartRoute}
-                  sendDataToParent2={processDataFromParent1}
-                />
-              )}
-            </Animated.View>
+          <Animated.View
+            style={{
+              transform: [{ translateY: -keyboardOffset }],
+              position: "absolute",
+              bottom: 180, // Adjust based on where you want the view to appear
+              left: 0,
+              right: 0,
+            }}
+          >
+            {routePlanned && dataReceived ? (
+              <StartPath
+                routeSummary={routeSummary}
+                region={region}
+                onStopClick={handleStopRoute}
+                sendDistanceToMapScreen={processDistanceFromStartPath}
+                sendTimeToMapScreen={processTimeFromStartPath}
+                routeData={routeData}
+                sendRouteIdToMapScreen={processRouteIdFromStartPath}
+              />
+            ) : (
+              <RouteInfoPlanning
+                onStartClick={handlePlanStartRoute}
+                sendDataToParent2={processDataFromParent1}
+              />
+            )}
+          </Animated.View>
 
-
-            <Pressable
-        onPress={toggleRouteInfo}
-        style={{
-          position: "absolute",
-          left: 25,
-          bottom: 450, // Adjust as necessary
-          // Add additional styling to make the touchable area visible or integrate it with your UI
-        }}
-      >
-        {isRouteInfoVisible ? <Image className = "h-8 w-8" source = {require("@/src/assets/images/hide.png")} /> : <Image className = "h-8 w-8" source = {require("@/src/assets/images/show.png")} />}
-        
-      </Pressable>
-
-          </View> 
-          )
-        }
-        
-          
-      
-
-
+          <Pressable
+            onPress={toggleRouteInfo}
+            style={{
+              position: "absolute",
+              left: 25,
+              bottom: 450, // Adjust as necessary
+            }}
+          >
+            {isRouteInfoVisible ? (
+              <Image
+                className="h-8 w-8"
+                source={require("@/src/assets/images/hide.png")}
+              />
+            ) : (
+              <Image
+                className="h-8 w-8"
+                source={require("@/src/assets/images/show.png")}
+              />
+            )}
+          </Pressable>
+        </View>
+      )}
     </View>
   );
 };

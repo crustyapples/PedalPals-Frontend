@@ -127,7 +127,6 @@ const ProfilePage: React.FC = () => {
       {userData && (
         <>
           <UserDetails
-            profilePic={require("@/src/assets/images/favicon.png")} // Placeholder, replace with actual profilePic if available
             username={username}
             numOfPals={friendsList.length}
             teleHandle="@thelegend27" // Placeholder, replace with actual data if available

@@ -26,6 +26,7 @@ type Post = {
     route: Route;
     timestamp: string;
     user: string;
+    avatar: any;
 }
 
 type UserPostsProps = {
@@ -34,9 +35,9 @@ type UserPostsProps = {
 
 const UserPosts: React.FC<UserPostsProps> = ({ socialPostData }) => {
   return (
-    <View className="flex-col mt-3">
-      <Text className="font-Poppins_Bold text-2xl text-black">Your Posts</Text>
-      <View>
+    <View className="flex-col my-8">
+      <Text className="font-Poppins_Bold text-3xl text-black text-center">Your Posts</Text>
+      <View className="mt-8">
         {socialPostData.map((cycle, index) => (
           <PostCard key={index} {...cycle} />
         ))}

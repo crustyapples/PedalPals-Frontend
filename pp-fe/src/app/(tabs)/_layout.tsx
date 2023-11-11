@@ -31,23 +31,6 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
-          headerLeft: () => (
-            <View className="flex-row">
-              <Link href="/screens/ProfileScreen" asChild>
-                <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="user"
-                    size={25}
-                    color="black"
-                    style={{ marginLeft: 15, opacity: pressed ? 0.5 : 1 }}
-                    // onPress={logout}
-                  />  )}               
-                </Pressable>
-              </Link>
-                         
-            </View>
-          ),
           headerRight: () => (
             <View className="flex-row">
 
@@ -107,13 +90,13 @@ export default function TabLayout() {
         }}
       />
 
-      {/* <Tabs.Screen
+      <Tabs.Screen
         name="profileTab"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
         }}  
-      /> */}
+      />
     </Tabs>
   );
 }
