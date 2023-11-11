@@ -55,31 +55,28 @@ const WeeklyChallengeRoute: React.FC = () => {
 
   return (
     <View className="flex items-center">
-      <Text className="text-black font-Poppins_Bold text-2xl m-2">
+      <Text className="text-black font-Poppins_Bold text-2xl m-4">
         Weekly Challenge Routes
       </Text>
 
-
-      {
-        Array.from({ length: Math.ceil(dummyData.length / 2) }).map(
-          (_, index) => (
-            <View key={index} className="flex-row justify-between mx-4">
+      {Array.from({ length: Math.ceil(dummyData.length / 2) }).map(
+        (_, index) => (
+          <View key={index} className="flex-row justify-between mx-4">
+            <RouteCard
+              routeName={dummyData[index * 2].routeName}
+              mapImage={dummyData[index * 2].mapImage}
+              distance={dummyData[index * 2].distance}
+            />
+            {dummyData[index * 2 + 1] && (
               <RouteCard
-                routeName={dummyData[index * 2].routeName}
-                mapImage={dummyData[index * 2].mapImage}
-                distance={dummyData[index * 2].distance}
+                routeName={dummyData[index * 2 + 1].routeName}
+                mapImage={dummyData[index * 2 + 1].mapImage}
+                distance={dummyData[index * 2 + 1].distance}
               />
-              {dummyData[index * 2 + 1] && (
-                <RouteCard
-                  routeName={dummyData[index * 2 + 1].routeName}
-                  mapImage={dummyData[index * 2 + 1].mapImage}
-                  distance={dummyData[index * 2 + 1].distance}
-                />
-              )}
-            </View>
-          )
+            )}
+          </View>
         )
-      }
+      )}
     </View>
   );
 };
