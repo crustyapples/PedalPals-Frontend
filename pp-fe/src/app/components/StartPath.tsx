@@ -12,10 +12,8 @@ import {
   Image,
 } from "react-native";
 import { useAuthDetails } from "../contexts/AuthContext";
-import axios, { AxiosRequestConfig } from "axios";
-import { Picker } from "@react-native-picker/picker";
-import { FlatList } from "react-native-gesture-handler";
 import { FontAwesome } from "@expo/vector-icons";
+import * as Location from 'expo-location';
 
 type StartPathProps = {
   routeSummary: any;
@@ -44,7 +42,7 @@ const StartPath: React.FC<StartPathProps> = ({
 
   const [totalDistance, setTotalDistance] = useState(0);
   const [routeId, setRouteId] = useState("");
-  //   const [random, setRandom] = useState("");
+  const [currentRouteData, setCurrentRouteData] = useState(routeData.route_summary);
 
   const { getToken, getUserId, getEmail } = useAuthDetails();
   const [token, setToken] = useState("");
@@ -58,16 +56,85 @@ const StartPath: React.FC<StartPathProps> = ({
   const [startData, setStartData] = useState(region);
   const [endData, setEndData] = useState(region);
 
+  // Add state to track location
+  const [location, setLocation] = useState(null);
+  const [locations, setLocations] = useState([]);
+
+  // Start tracking live location and update states
+  const startLocationTracking = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      console.error('Permission to access location was denied');
+      return;
+    }
+
+    // Start tracking the location
+    await Location.watchPositionAsync(
+      {
+        accuracy: Location.Accuracy.Highest,
+        distanceInterval: 1,
+      },
+      (newLocation) => {
+        setLocation(newLocation);
+        setLocations((currentLocations) => [...currentLocations, newLocation]);
+      }
+    );
+  };
+
+  const getDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371e3; // earth radius in meters
+    const φ1 = (lat1 * Math.PI) / 180; // φ, λ in radians
+    const φ2 = (lat2 * Math.PI) / 180;
+    const Δφ = ((lat2 - lat1) * Math.PI) / 180;
+    const Δλ = ((lon2 - lon1) * Math.PI) / 180;
+  
+    const a =
+      Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+      Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  
+    const distance = R * c; // in meters
+    return distance;
+  };
+  
+  // Replace the calculateTotalDistance function with the following:
+  
+  const calculateTotalDistance = () => {
+    let totalDistance = 0;
+    for (let i = 1; i < locations.length; i++) {
+      const startCoords = locations[i - 1].coords;
+      const endCoords = locations[i].coords;
+      totalDistance += getDistance(
+        startCoords.latitude,
+        startCoords.longitude,
+        endCoords.latitude,
+        endCoords.longitude
+      );
+    }
+    return totalDistance;
+  };
+
+  // Timer functions
   const startTimer = () => {
     if (!timerId) {
       const id = setInterval(() => {
         setSeconds((seconds) => seconds + 1);
       }, 1000);
       setTimerId(id);
+      setTimerStarted(true);
+      startLocationTracking();
     }
   };
 
   const pauseTimer = () => {
+    if (timerId) {
+      clearInterval(timerId);
+      setTimerId(null);
+    }
+  };
+
+  const resetTimer = () => {
+    setSeconds(0);
     if (timerId) {
       clearInterval(timerId);
       setTimerId(null);
@@ -80,14 +147,6 @@ const StartPath: React.FC<StartPathProps> = ({
     return `${minutes < 10 ? "0" : ""}${minutes}:${
       remainingSeconds < 10 ? "0" : ""
     }${remainingSeconds}`;
-  };
-
-  const resetTimer = () => {
-    setSeconds(0);
-    if (timerId) {
-      clearInterval(timerId);
-      setTimerId(null);
-    }
   };
 
   const ShareButton = () => {
@@ -136,10 +195,16 @@ const StartPath: React.FC<StartPathProps> = ({
 
   const fetchData = async () => {
     try {
+      const tempRouteData = routeData.route_summary;
+      const distanceTravelled = calculateTotalDistance();
+      tempRouteData.total_distance = distanceTravelled;
+      tempRouteData.total_time = seconds;
+      setCurrentRouteData(tempRouteData);
+
       AcceptRoute().then((routeIdData) => {
         setRouteId(routeIdData);
         console.log("set routeid:", routeIdData);
-        sendDistanceToMapScreen(totalDistance);
+        sendDistanceToMapScreen(distanceTravelled);
         sendRouteIdToMapScreen(routeIdData);
         sendTimeToMapScreen(seconds);
         setStopClicked(true);
@@ -267,12 +332,8 @@ const StartPath: React.FC<StartPathProps> = ({
 
     // Clean up the interval when the component unmounts
     return () => clearInterval(intervalId);
-  }, [region]); // Ensure the effect runs when data changes
-
-  // useEffect(() => {
-  //   getRoute();
-  // }, [endData]);
-
+  }, [region]); 
+  
   return (
     <View className="bg-[#2dd4bf] h-64 rounded-t-xl rounded-b-xl flex-col justify-start pl-4 pr-4">
       <View className=" flex-row justify-between bg-[#ccfbf1] rounded-t-xl rounded-b-xl mt-4 ">

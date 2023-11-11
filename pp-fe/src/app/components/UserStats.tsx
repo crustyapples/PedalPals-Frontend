@@ -31,7 +31,7 @@ const UserStats: React.FC<UserStatsProps> = ({
         <View>
           <Text className="font-Poppins_Light text-lg text-gray-600">Average Speed</Text>
           <Text className="font-Poppins_Medium text-2xl text-black">
-            {averageSpeed} km/h
+            {Math.round(averageSpeed)} km/h
           </Text>
         </View>
       </View>

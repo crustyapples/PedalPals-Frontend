@@ -1,145 +1,101 @@
-import { StyleSheet } from "react-native";
-import React, { useState, useEffect } from "react";
-
-import EditScreenInfo from "../components/EditScreenInfo";
-import { Text, View, ScrollView, Alert } from "react-native";
-
-import UserDetails from "../components/UserDetails";
-import UserStats from "../components/UserStats";
-import UserPosts from "../components/UserPosts";
-// import UserPosts2 from "../components/UserPosts2";
-import { useAuthDetails } from "../contexts/AuthContext";
+import React, { useState, useEffect } from 'react';
+import { ScrollView, RefreshControl, Alert } from 'react-native';
+import UserDetails from '../components/UserDetails';
+import UserStats from '../components/UserStats';
+import UserPosts from '../components/UserPosts';
+import { useAuthDetails } from '../contexts/AuthContext';
 
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
+type User = {
+  _id: string;
+  name: string;
+  email: string;
+  teleHandle: string;
+  instaHandle: string;
+  friends_list: any;
+  posts: any;
+  analytics: any;
+  gamification: any;
+};
+
 const ProfilePage: React.FC = () => {
-  const {getToken, getEmail, getUserId} = useAuthDetails();
-  const [token, setToken] = useState("");
-  const [email, setEmail] = useState("");
-  const [userId, setUserId] = useState("");  
+  const { getToken, getUserId } = useAuthDetails();
+  const [token, setToken] = useState('');
+  const [userId, setUserId] = useState('');
+  const [refreshing, setRefreshing] = useState(false);
+  const [userData, setUserData] = useState<User | null>(null);
 
-  const [avgSpeed, setAvgSpeed] = useState(0);
-  const [routes, setRoutes] = useState([]);
-  const [totalDistance, setTotalDistance] = useState(0);
-  const[emailAddress, setEmailAddress] = useState("");
-  const[friendsList, setFriendsList] = useState([]);
-  const[game, setGame] = useState();
-  const [badgeCount, setBadgeCount] = useState(0);
-  const[badges, setBadges] = useState([]);
-  const [leadershipPosition, setLeadershipPosition] = useState(0);
-  const [points, setPoints] = useState(0);
-  const [coordinates, setCoordinates] = useState("");
-  const [gpsPermission, setGpsPermission] = useState("");
-  const [username, setUsername] = useState("");
-  const[posts, setPosts] = useState([]);
-  const[userData, setUserData] = useState();
-
-
-  const loadUserInfo = async () => {
+  const fetchUserData = async () => {
     try {
-      const response = await fetch(BASE_URL + `/users/${userId}`, {
-        method: "GET",
+      const response = await fetch(`${BASE_URL}/users/${userId}`, {
+        method: 'GET',
         headers: {
-          "Authorization": "Bearer " + token,
-          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
       });
 
       if (!response.ok) {
-        console.error("Server responded with an error:", response.statusText);
-        return;
+        throw new Error(response.statusText);
       }
 
       const data = await response.json();
-      console.log(data);
       setUserData(data);
-
-      setAvgSpeed(data.analytics.avg_speed);
-      setRoutes(data.analytics.routes);
-      setTotalDistance(data.analytics.total_distance);
-      setEmailAddress(data.email);
-      setFriendsList(data.friends_list);
-
-      setGame(data.gamification);
-      setBadgeCount(data.gamification.badgeCount);
-      setBadges(data.gamification.badges)
-      setLeadershipPosition(data.gamification.leadership_position);
-      setPoints(data.gamification.points);
-
-      setCoordinates(data.location.coordinates);
-      setGpsPermission(data.location.gps_permission);
-      setUsername(data.name);
-      setPosts(data.posts);
+    } catch (error) {
+      console.error('Error:', error);
+      Alert.alert('Error', 'Failed to fetch user data');
     }
-    catch (error) {
-      console.error('Authentication error', error);
-      Alert.alert('Authentication error', 'Something went wrong');
-    }
-
   };
 
   useEffect(() => {
     const fetchDetails = async () => {
-      const token = await getToken();
-      const user_id = await getUserId();
-      const email = await getEmail();
+      const fetchedToken = await getToken();
+      const fetchedUserId = await getUserId();
 
-      console.log('Token:', token);
-      console.log('User ID:', user_id);
-      console.log('Email:', email);
-
-      setToken(token);
-      setUserId(user_id);
-      setEmail(email);
+      setToken(fetchedToken);
+      setUserId(fetchedUserId);
     };
 
     fetchDetails();
   }, []);
 
-
   useEffect(() => {
     if (token && userId) {
-      loadUserInfo();
+      fetchUserData();
     }
   }, [token, userId]);
 
-  const profilePic = require("@/src/assets/images/favicon.png");
-  const teleHandle = "@thelegend27";
-  const instaHandle = "@thelegend27";
-
-
-  // Function to count the occurrence of each badge
-  const countBadges = (badges) => {
-    const badgeCount = { bronze: 0, silver: 0, gold: 0 };
-    badges.forEach((badge) => {
-      if (badgeCount.hasOwnProperty(badge)) {
-        badgeCount[badge]++;
-      }
-    });
-    return badgeCount;
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchUserData();
+    setRefreshing(false);
   };
 
-  const badgeCounts = game ? countBadges(badges) : { bronze: 0, silver: 0, gold: 0 };
-
+  const badgeCounts = userData ? countBadges(userData.gamification.badges) : { bronze: 0, silver: 0, gold: 0 };
 
   return (
-    <ScrollView>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       {userData && (
         <>
           <UserDetails
-            username={username}
-            numOfPals={friendsList.length}
-            teleHandle="@thelegend27" // Placeholder, replace with actual data if available
-            instaHandle="@thelegend27" // Placeholder, replace with actual data if available
+            username={userData.name}
+            numOfPals={userData.friends_list.length}
+            teleHandle={userData.teleHandle || "@thelegend27"}
+            instaHandle={userData.instaHandle || "@thelegend27"}
             numOfReward1={badgeCounts.bronze}
             numOfReward2={badgeCounts.silver}
             numOfReward3={badgeCounts.gold}
           />
           <UserStats
-            totalDistanceTravelled={totalDistance}
-            averageSpeed={avgSpeed}
+            totalDistanceTravelled={userData.analytics.total_distance}
+            averageSpeed={userData.analytics.avg_speed}
           />
-          <UserPosts socialPostData={posts} />
+          <UserPosts socialPostData={userData.posts} />
         </>
       )}
     </ScrollView>
@@ -148,8 +104,12 @@ const ProfilePage: React.FC = () => {
 
 export default ProfilePage;
 
-
-
-
-
-
+function countBadges(badges) {
+  const badgeCount = { bronze: 0, silver: 0, gold: 0 };
+  badges.forEach((badge) => {
+    if (badgeCount.hasOwnProperty(badge)) {
+      badgeCount[badge]++;
+    }
+  });
+  return badgeCount;
+}
