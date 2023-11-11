@@ -160,7 +160,7 @@ const PostCard: React.FC<Post> = ({
       console.log("Comment:", comment);
       submitComment(comment);
       setNumComments(numComments + 1);
-      setDisplayedComments([...displayedComments, [user, comment]]);
+      setDisplayedComments([...displayedComments, [userId, comment]]);
     };
 
     return (
@@ -182,7 +182,7 @@ const PostCard: React.FC<Post> = ({
             <ScrollView className="mb-3">
               {displayedComments.map((commentObj, index) => (
                 <View key={index} className="p-2 border-b">
-                  <Text className="font-medium">{commentObj[0]}:</Text>
+                  <Text className="font-medium">{commentObj[2]}:</Text>
                   <Text className="text-sm">{commentObj[1]}</Text>
                 </View>
               ))}
