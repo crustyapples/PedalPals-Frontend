@@ -36,7 +36,11 @@ const UserDetails: React.FC<UserDetailsProps> = ({
   numOfReward2,
   numOfReward3,
 }) => {
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [isDropdownVisible, setIsDropdownVisible] = useState(true);
+
+  const toggleDropdown = () => {
+    setIsDropdownVisible(!isDropdownVisible);
+  };
 
   const AddFriendButton = () => {
     const onPressFunction = () => {
@@ -69,6 +73,8 @@ const UserDetails: React.FC<UserDetailsProps> = ({
         </View>
       </View>
 
+
+
       <Text className="font-Poppins_Bold text-4xl text-black text-center mb-2">
         {username}
       </Text>
@@ -90,12 +96,22 @@ const UserDetails: React.FC<UserDetailsProps> = ({
         </View>
       </View>
 
-      <DropdownEditDetails
-        visibleState={{
-          visible: isDropdownVisible,
-          setVisible: setIsDropdownVisible,
-        }}
-      />
+      <TouchableOpacity onPress={toggleDropdown} className="mb-4">
+        <View className="flex-row justify-center items-center bg-[#2dd4bf] rounded-md p-2">
+          <FontAwesome name="edit" size={20} color="white" />
+          <Text className="ml-2 text-white">Edit Details</Text>
+        </View>
+      </TouchableOpacity>
+
+      {/* DropdownEditDetails visibility is controlled by isDropdownVisible */}
+      {isDropdownVisible && (
+        <DropdownEditDetails
+          visibleState={{
+            visible: isDropdownVisible,
+            setVisible: setIsDropdownVisible,
+          }}
+        />
+      )}
 
       <View className="flex-row justify-around mt-4">
         <View className="items-center">
