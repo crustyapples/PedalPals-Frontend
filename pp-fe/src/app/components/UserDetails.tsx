@@ -2,10 +2,12 @@ import { StyleSheet } from 'react-native';
 import React, { useState } from 'react';
 
 import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { Text, View, ScrollView, Image, TouchableOpacity, Pressable } from 'react-native';
 import Leaderboard from '../components/LeaderBoard';
 import WeeklyChallengeRoute from '../components/WeeklyChallengeRoute';
 import DropdownEditDetails from './DropdownEditDetails';
+import { FontAwesome } from "@expo/vector-icons";
+
 
 
 type UserDetailsProps = {
@@ -23,6 +25,22 @@ type UserDetailsProps = {
 const UserDetails: React.FC<UserDetailsProps>= ({profilePic, username, numOfPals, teleHandle, instaHandle, numOfReward1, numOfReward2, numOfReward3}) => {
 
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+
+    const AddFriendButton = () => {
+        const onPressFunction = () => {
+          // Define the action when the button is pressed
+          console.log("Button pressed!");
+        };
+    
+        return (
+          <Pressable className="p-1" onPress={onPressFunction}>
+            <View className = "flex-row p-2 rounded-lg bg-[#2dd4bf] justify-center items-center">
+                <FontAwesome name="user-plus" size={25} color="black" />
+                <Text className = "ml-2 justify-center">Follow</Text>
+            </View>
+          </Pressable>
+        );
+      };
 
     return(
         <View>
@@ -46,6 +64,7 @@ const UserDetails: React.FC<UserDetailsProps>= ({profilePic, username, numOfPals
 
                         <View className = "flex-row justify-center items-center mt-3">
                             <Text className = "font-Poppins_Bold rounded-t-xl rounded-b-xl pl-4 pr-4 pt-2 pb-2 border text-center">{numOfPals} Pals</Text>
+                            {/* <AddFriendButton /> */}
                         </View>
 
                         <View className = "flex-row justify-center mt-3">

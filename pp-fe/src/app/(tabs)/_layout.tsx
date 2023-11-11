@@ -41,10 +41,11 @@ export default function TabLayout() {
                     size={25}
                     color="black"
                     style={{ marginLeft: 15, opacity: pressed ? 0.5 : 1 }}
-                    onPress={logout}
+                    // onPress={logout}
                   />  )}               
                 </Pressable>
               </Link>
+                         
             </View>
           ),
           headerRight: () => (

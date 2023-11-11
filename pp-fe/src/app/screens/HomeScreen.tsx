@@ -54,6 +54,7 @@ const HomePage: React.FC = () => {
       const filteredData = data.filter((post) => post.user_id!== userId);
 
       setPosts(filteredData);
+      console.log(posts);
 
     } catch (error) {
       console.error("Authentication error", error);
@@ -81,6 +82,8 @@ const HomePage: React.FC = () => {
       loadPosts(userId);
     }
   }, [token, userId]);
+
+  
 
   return (
     <ScrollView>
