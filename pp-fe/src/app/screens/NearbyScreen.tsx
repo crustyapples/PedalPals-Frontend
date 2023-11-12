@@ -1,15 +1,33 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Alert,
+  TouchableOpacity,
+  RefreshControl,
+  ScrollView
+} from "react-native";
 import Slider from "@react-native-community/slider";
 import UserItem from "@/src/app/components/UserItem";
-import { useAuthDetails, useAuthToken } from "../contexts/AuthContext";
+import { useAuthDetails } from "../contexts/AuthContext";
 import * as Location from "expo-location";
-import axios, { AxiosRequestConfig } from "axios";
-import { ScrollView } from "react-native-gesture-handler";
+import axios from "axios";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
-// async functoin to request for location using the location service from expo location
+type User = {
+  _id: string;
+  name: string;
+  email: string;
+  teleHandle: string;
+  instaHandle: string;
+  friends_list: any;
+  posts: any;
+  analytics: any;
+  gamification: any;
+};
+
 async function getUserLocation() {
   let { status } = await Location.requestForegroundPermissionsAsync();
   if (status !== "granted") {
@@ -25,13 +43,75 @@ async function getUserLocation() {
 }
 
 const NearbyPage: React.FC = () => {
-  const [distance, setDistance] = useState(5);
-  const [nearbyUsers, setNearbyUsers] = useState([]);
+  const [activeTab, setActiveTab] = useState("nearby"); // 'nearby' or 'search'
+
   const { getToken, getUserId, getEmail } = useAuthDetails();
   const [token, setToken] = useState("");
   const [userId, setUserId] = useState("");
   const [email, setEmail] = useState("");
+  const [userData, setUserData] = useState<User | null>(null);
+
   const [newLocation, setNewLocation] = useState(null);
+  const [distance, setDistance] = useState(5);
+  const [nearbyUsers, setNearbyUsers] = useState([]);
+  const [searchedUser, setSearchedUser] = useState("");
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    console.log("Refreshing");
+    // Add your refresh logic here
+    await fetchUserData();
+    await getLocationAndFindNearbyCyclist();
+
+    setRefreshing(false);
+  }, []);
+
+  const handleSearch = (searchText, allUsers) => {
+    console.log(searchText);
+    const filteredUsers = allUsers.filter((user) => {
+      return user.username.toLowerCase().includes(searchText.toLowerCase());
+    });
+    console.log("filtered", filteredUsers);
+    setFilteredUsers(filteredUsers);
+  };
+
+  const addRemoveFriend = (id,friendName) => {
+    setUserData((prevState) => {
+      const newUserData = { ...prevState };
+      if (newUserData.friends_list.includes(friendName)) {
+        newUserData.friends_list = newUserData.friends_list.filter(
+          (friend) => friend !== friendName
+        );
+      } else {
+        newUserData.friends_list.push(friendName);
+      }
+      return newUserData;
+    })
+  }
+
+  const fetchUserData = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/users/${userId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      const data = await response.json();
+      console.log("Got User Data");
+      setUserData(data);
+    } catch (error) {
+      console.error("User Data Error:", error);
+    }
+  };
 
   const findNearbyCyclist = async (location) => {
     try {
@@ -55,6 +135,29 @@ const NearbyPage: React.FC = () => {
       const data = await response.json();
       console.log(data);
       setNearbyUsers(data.nearby_users);
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  };
+
+  const getAllUsers = async () => {
+    try {
+      const response = await fetch(BASE_URL + "/users", {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        console.error("Server responded with an error:", response.statusText);
+        return;
+      }
+
+      const data = await response.json();
+      console.log(data);
+      return data;
     } catch (error) {
       console.error("Network error:", error);
     }
@@ -111,6 +214,9 @@ const NearbyPage: React.FC = () => {
 
   useEffect(() => {
     getLocationAndFindNearbyCyclist();
+    if (token && userId) {
+      fetchUserData();
+    }
   }, [token, userId]);
 
   useEffect(() => {
@@ -124,33 +230,125 @@ const NearbyPage: React.FC = () => {
     }
   }, [Math.round(distance)]);
 
+  useEffect(() => {
+    getAllUsers().then((data) => {
+      handleSearch(searchedUser, data);
+    });
+  }, [searchedUser]);
+
   return (
-    <View className="bg-gray-100">
-      <View className="p-4">
-        <TextInput
-          placeholder="Search"
-          className="my-4 p-2 border rounded text-gray-500"
-        />
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      <View className="bg-gray-100">
+        <View
+          className="p-4"
+          style={{
+            borderBottomWidth: 1,
+            borderBottomColor: "#ddd",
+            backgroundColor: "#f7f7f7",
+          }}
+        >
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-around" }}
+          >
+            <TouchableOpacity
+              onPress={() => setActiveTab("nearby")}
+              style={{ padding: 10 }}
+              activeOpacity={0.7}
+            >
+              <Text
+                style={{
+                  color: activeTab === "nearby" ? "blue" : "#666",
+                  fontSize: activeTab === "nearby" ? 16 : 16,
+                  fontWeight: activeTab === "nearby" ? "bold" : "normal",
+                  borderBottomWidth: activeTab === "nearby" ? 2 : 0,
+                  borderBottomColor: "blue",
+                }}
+              >
+                Nearby Users
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setActiveTab("search")}
+              style={{ padding: 10 }}
+              activeOpacity={0.7}
+            >
+              <Text
+                style={{
+                  color: activeTab === "search" ? "blue" : "#666",
+                  fontSize: activeTab === "search" ? 16 : 16,
+                  fontWeight: activeTab === "search" ? "bold" : "normal",
+                  borderBottomWidth: activeTab === "search" ? 2 : 0,
+                  borderBottomColor: "blue",
+                }}
+              >
+                Search Results
+              </Text>
+            </TouchableOpacity>
+          </View>
 
-        <Text className="mb-2">{`Distance: ${Math.round(distance)} km`}</Text>
-        <Slider
-          minimumValue={0}
-          maximumValue={10}
-          value={distance}
-          onValueChange={(value) => setDistance(value)}
-        />
-      </View>
+          {activeTab === "search" && (
+            <TextInput
+              placeholder="Search"
+              className="my-4 p-2 border rounded text-gray-500"
+              value={searchedUser}
+              onChangeText={(value) => setSearchedUser(value)}
+            />
+          )}
 
-      <ScrollView>
-        <View className="flex-row flex-wrap justify-center">
-          {nearbyUsers.map((user, index) => (
-            <View key={user.id} style={{ width: "50%" }}>
-              <UserItem user={user} />
-            </View>
-          ))}
+          {activeTab === "nearby" && (
+            <>
+              <Text className="mb-2">{`Distance: ${Math.round(
+                distance
+              )} km`}</Text>
+              <Slider
+                minimumValue={0}
+                maximumValue={10}
+                value={distance}
+                onValueChange={(value) => setDistance(value)}
+              />
+            </>
+          )}
         </View>
-      </ScrollView>
-    </View>
+
+        <ScrollView>
+          <View className="flex-row flex-wrap justify-center">
+            {activeTab === "nearby" &&
+              nearbyUsers.map((user) => (
+                <View key={user.id} style={{ width: "50%" }}>
+                  {/* Pass distance prop only when 'nearby' tab is active */}
+                  <UserItem
+                    id={user.id}
+                    username={user.username}
+                    distance={user.distance}
+                    token={token}
+                    userId={userId}
+                    isFriend={userData.friends_list.includes(user.username)}
+                    updateFriend={addRemoveFriend}
+                  />
+                </View>
+              ))}
+            {activeTab === "search" &&
+              filteredUsers.map((user) => (
+                <View key={user.id} style={{ width: "50%" }}>
+                  {/* Do not pass distance prop when 'search' tab is active */}
+                  <UserItem
+                    id={user.id}
+                    username={user.username}
+                    token={token}
+                    userId={userId}
+                    isFriend={userData.friends_list.includes(user.username)}
+                    updateFriend={addRemoveFriend}
+                  />
+                </View>
+              ))}
+          </View>
+        </ScrollView>
+      </View>
+    </ScrollView>
   );
 };
 
