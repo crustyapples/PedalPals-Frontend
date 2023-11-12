@@ -61,9 +61,10 @@ const NearbyPage: React.FC = () => {
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
     console.log("Refreshing");
-    // Add your refresh logic here
-    await fetchUserData();
-    await getLocationAndFindNearbyCyclist();
+    getLocationAndFindNearbyCyclist();
+    if (token && userId) {
+      fetchUserData();
+    }
 
     setRefreshing(false);
   }, []);

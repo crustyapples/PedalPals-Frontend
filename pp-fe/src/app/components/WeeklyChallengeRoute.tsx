@@ -29,6 +29,7 @@ const WeeklyChallengeRoute: React.FC = () => {
           </View>
         ))}
         </View>
+        
       </ScrollView>
     </View>
   );

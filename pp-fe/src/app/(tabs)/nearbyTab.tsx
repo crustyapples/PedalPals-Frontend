@@ -5,11 +5,11 @@ import { Text, View, ScrollView } from 'react-native';
 
 export default function NearbyTab() {
   return (
-    <ScrollView >
+    <View >
       {/* <Text style={styles.title}>Nearby Page goes here</Text>
       <View style={styles.separator} />
       <EditScreenInfo path="app/(tabs)/nearbyTab.tsx" /> */}
       <NearbyPage />
-    </ScrollView>
+    </View>
   );
 }

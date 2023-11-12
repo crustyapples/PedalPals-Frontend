@@ -1,8 +1,6 @@
-import { StyleSheet } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuthDetails } from "../contexts/AuthContext";
-import EditScreenInfo from "../components/EditScreenInfo";
-import { Text, View, ScrollView, FlatList } from "react-native";
+import { View, ScrollView, RefreshControl } from "react-native";
 import RouteCard from "../components/RouteCard";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
@@ -31,7 +29,27 @@ const RoutePage: React.FC = () => {
   const [userData, setUserData] = useState<User | null>(null);
   const [routes, setRoutes] = useState<Route[]>([]);
   const [userRoutes, setUserRoutes] = useState<Route[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    if (userId && token) {
+      fetchUserData().then((fetched_userData) =>
+        fetchRoutes().then((fetched_routes) => {
+          // userData.routes contains the route ids
+          console.log("user route ids", fetched_userData.analytics.routes);
+          const userRoutes = fetched_routes.filter((route) =>
+            fetched_userData.analytics.routes.includes(route._id)
+          );
+          console.log("User Routes:", userRoutes[0]);
+          setUserRoutes(userRoutes);
+        })
+      );
+    }
+    // Ensure to call fetchRoutes inside fetchUserData if needed
+    // or call it here after fetchUserData if they are independent
+    setRefreshing(false);
+  }, [userId, token]); // Add other dependencies if necessary
   const fetchRoutes = async () => {
     try {
       const response = await fetch(`${BASE_URL}/routes`, {
@@ -104,7 +122,7 @@ const RoutePage: React.FC = () => {
           // userData.routes contains the route ids
           console.log("user route ids", fetched_userData.analytics.routes);
           const userRoutes = fetched_routes.filter((route) =>
-          fetched_userData.analytics.routes.includes(route._id)
+            fetched_userData.analytics.routes.includes(route._id)
           );
           console.log("User Routes:", userRoutes[0]);
           setUserRoutes(userRoutes);
@@ -114,20 +132,19 @@ const RoutePage: React.FC = () => {
   }, [userId, token]);
 
   return (
-    <View className="flex items-center mt-5">
-      <Text className="font-Poppins_Bold text-3xl text-black text-center">
-        Your Routes
-      </Text>
-      <ScrollView>
-        <View className="flex-row flex-wrap justify-center">
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      <View className="flex-row flex-wrap justify-center">
         {userRoutes.map((route, index) => (
-          <View style={{width:"50%"}}>
+          <View style={{ width: "50%" }}>
             <RouteCard key={index} {...route} />
           </View>
         ))}
-        </View>
-      </ScrollView>
-    </View>
+      </View>
+    </ScrollView>
   );
 };
 
