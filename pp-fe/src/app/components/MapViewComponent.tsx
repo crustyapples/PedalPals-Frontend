@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Polyline, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 
-const MapViewComponent = ({ region, routeCoordinates }) => {
+const MapViewComponent = ({ region, routeCoordinates, routePoints }) => {
   const [heading, setHeading] = useState(0);
 
   useEffect(() => {
@@ -27,6 +27,24 @@ const MapViewComponent = ({ region, routeCoordinates }) => {
       headingSubscription && headingSubscription.remove();
     };
   }, []);
+
+    // Helper function to parse coordinates from string to object
+    const parseCoordinates = (coordinatesString) => {
+      const [latitude, longitude] = coordinatesString.replace('(', '').replace(')', '').split(', ').map(Number);
+      return { latitude, longitude };
+    };
+
+      // Helper function to determine marker color based on point type
+    const getMarkerColor = (pointType) => {
+      switch (pointType) {
+        case 'WaterPoint':
+          return 'blue';
+        case 'bikeRack':
+          return 'green';
+        default:
+          return 'red';
+      }
+    };
 
   return (
     <View style={{ flex: 1 }}>
@@ -68,6 +86,15 @@ const MapViewComponent = ({ region, routeCoordinates }) => {
           strokeColors={['#7F0000']}
           strokeWidth={3}
         />
+        {routePoints.map((point) => (
+          <Marker
+            key={point._id}
+            coordinate={parseCoordinates(point.coordinates)}
+            title={point.name}
+            description={point.description}
+            pinColor={getMarkerColor(point.type)}
+          />
+        ))}
       </MapView>
     </View>
   );

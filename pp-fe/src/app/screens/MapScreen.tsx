@@ -33,6 +33,7 @@ const MapPage: React.FC = () => {
   // State to manage the active/inactive status of the RouteInfoPlanning
   const [routeInfoActive, setRouteInfoActive] = useState(false);
   const [keyboardOffset, setKeyboardOffset] = useState(0);
+  const [routePoints, setRoutePoints] = useState([]);
 
   const postSetPlanned = (state) => {
     setRoutePlanned(state);
@@ -121,6 +122,7 @@ const MapPage: React.FC = () => {
       console.log("This is route data from parent 1", routeData);
       setRG(data.route_geometry);
       setRouteSummary(data.route_summary);
+      setRoutePoints(data.route_points);
       setDataReceived(true);
       const decodedCoordinates = polyline
         .decode(data.route_geometry)
@@ -196,6 +198,7 @@ const MapPage: React.FC = () => {
           <MapViewComponent
             region={region}
             routeCoordinates={routeCoordinates}
+            routePoints={routePoints}
           />
 
           <View className="absolute top-0 left-0">
@@ -204,9 +207,9 @@ const MapPage: React.FC = () => {
 
           <Animated.View
             style={{
-              transform: [{ translateY: -keyboardOffset }],
+              transform: [{ translateX: routeInfoAnim }],
               position: "absolute",
-              bottom: 130, // Adjust based on where you want the view to appear
+              bottom: 180, // Adjust based on where you want the view to appear
               left: 0,
               right: 0,
             }}
