@@ -266,8 +266,8 @@ const MapPage: React.FC = () => {
             onPress={toggleRouteInfo}
             style={{
               position: "absolute",
-              left: 25,
-              bottom: 450, // Adjust as necessary
+              left: 15,
+              bottom: 420, // Adjust as necessary
             }}
           >
             {isRouteInfoVisible ? (

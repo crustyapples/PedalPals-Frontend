@@ -5,7 +5,7 @@ import { useState } from "react";
 type UserItemProps = {
   id: number;
   username: string;
-  distance?: any;
+  distance?: number;
   avatar?: any;
   isFriend?: boolean;
   token?: any;
@@ -26,6 +26,9 @@ const UserItem: React.FC<UserItemProps> = ({
   updateFriend
 }) => {
   const [added, setAdded] = useState(isFriend);
+
+  let displayDistance = '0 km';
+  displayDistance = distance ? `${distance} km` : displayDistance;
 
   const addRemoveFriend = async (friendId, toAdd) => {
     let url = `${BASE_URL}/add-friend/${friendId}`;
@@ -52,10 +55,10 @@ const UserItem: React.FC<UserItemProps> = ({
 
       if (toAdd) {
         setAdded(true);
-        updateFriend(friendId,username)
+        updateFriend(friendId)
       } else {
         setAdded(false);
-        updateFriend(friendId,username)
+        updateFriend(friendId)
       }
     } catch (error) {
       console.error("Error:", error);
@@ -76,9 +79,9 @@ const UserItem: React.FC<UserItemProps> = ({
       </View>
       <Text className="font-semibold text-lg mb-1">{username}</Text>
 
-      {distance && (
-        <Text className="text-sm text-gray-600 mb-3">{`${distance} km`}</Text>
-      )}
+      
+        <Text className="text-sm text-gray-600 mb-3">{displayDistance}</Text>
+      
 
       {added ? (
         <View className="bg-gray-500 w-full rounded-md shadow">

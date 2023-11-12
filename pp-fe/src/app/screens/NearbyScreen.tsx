@@ -77,15 +77,15 @@ const NearbyPage: React.FC = () => {
     setFilteredUsers(filteredUsers);
   };
 
-  const addRemoveFriend = (id,friendName) => {
+  const addRemoveFriend = (id) => {
     setUserData((prevState) => {
       const newUserData = { ...prevState };
-      if (newUserData.friends_list.includes(friendName)) {
+      if (newUserData.friends_list.includes(id)) {
         newUserData.friends_list = newUserData.friends_list.filter(
-          (friend) => friend !== friendName
+          (friend) => friend !== id
         );
       } else {
-        newUserData.friends_list.push(friendName);
+        newUserData.friends_list.push(id);
       }
       return newUserData;
     })
@@ -326,7 +326,7 @@ const NearbyPage: React.FC = () => {
                     distance={user.distance}
                     token={token}
                     userId={userId}
-                    isFriend={userData.friends_list.includes(user.username)}
+                    isFriend={userData.friends_list.includes(user.id)}
                     updateFriend={addRemoveFriend}
                   />
                 </View>
@@ -340,7 +340,7 @@ const NearbyPage: React.FC = () => {
                     username={user.username}
                     token={token}
                     userId={userId}
-                    isFriend={userData.friends_list.includes(user.username)}
+                    isFriend={userData.friends_list.includes(user.id)}
                     updateFriend={addRemoveFriend}
                   />
                 </View>

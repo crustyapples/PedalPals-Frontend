@@ -36,7 +36,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
   numOfReward2,
   numOfReward3,
 }) => {
-  const [isDropdownVisible, setIsDropdownVisible] = useState(true);
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   const toggleDropdown = () => {
     setIsDropdownVisible(!isDropdownVisible);
