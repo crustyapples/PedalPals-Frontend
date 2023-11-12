@@ -132,7 +132,7 @@ const RouteInfoPlanning: React.FC<RouteInfoPlanningProps> = ({
       style={{ flex: 1 }}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View className="bg-[#2dd4bf] p-4 rounded-xl my-4 mx-3 shadow-md">
+        <View className="bg-[#2dd4bf] p-4 rounded-xl shadow-md">
           <View className="mb-3">
             <Text className="text-sm font-bold text-[#334155] mb-1">Start</Text>
             <TextInput
@@ -144,7 +144,7 @@ const RouteInfoPlanning: React.FC<RouteInfoPlanningProps> = ({
                 setStartListVisible(true);
               }}
             />
-            {isStartListVisible && (
+            {isStartListVisible && start_Text.length > 0 && (
               <FlatList
                 data={dataStart}
                 keyExtractor={(item, index) => item.toString()}
@@ -174,7 +174,7 @@ const RouteInfoPlanning: React.FC<RouteInfoPlanningProps> = ({
                 setEndListVisible(true);
               }}
             />
-            {isEndListVisible && (
+            {isEndListVisible && end_Text.length > 0 && (
               <FlatList
                 data={dataEnd}
                 keyExtractor={(item, index) => item.toString()}

@@ -17,6 +17,7 @@ import polyline from "@mapbox/polyline";
 import StartPath from "../components/StartPath";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import RoutePosting from "../components/RoutePosting";
+import WeatherDisplay from "../components/WeatherDisplay";
 
 const MapPage: React.FC = () => {
   const [routePlanned, setRoutePlanned] = useState(false);
@@ -185,6 +186,7 @@ const MapPage: React.FC = () => {
             time={timeTaken}
             routeData={routeData}
             routeId={routeId}
+            routeCoordinates = {routeCoordinates}
             setRoutePlanned={postSetPlanned}
             setRouteStopped={postSetStopped}
           />
@@ -204,21 +206,24 @@ const MapPage: React.FC = () => {
             style={{
               transform: [{ translateY: -keyboardOffset }],
               position: "absolute",
-              bottom: 180, // Adjust based on where you want the view to appear
+              bottom: 130, // Adjust based on where you want the view to appear
               left: 0,
               right: 0,
             }}
           >
             {routePlanned && dataReceived ? (
-              <StartPath
-                routeSummary={routeSummary}
-                region={region}
-                onStopClick={handleStopRoute}
-                sendDistanceToMapScreen={processDistanceFromStartPath}
-                sendTimeToMapScreen={processTimeFromStartPath}
-                routeData={routeData}
-                sendRouteIdToMapScreen={processRouteIdFromStartPath}
-              />
+              <View>
+                <StartPath
+                  routeSummary={routeSummary}
+                  region={region}
+                  onStopClick={handleStopRoute}
+                  sendDistanceToMapScreen={processDistanceFromStartPath}
+                  sendTimeToMapScreen={processTimeFromStartPath}
+                  routeData={routeData}
+                  sendRouteIdToMapScreen={processRouteIdFromStartPath}
+                />
+                <WeatherDisplay routeData = {routeData} />
+              </View>
             ) : (
               <RouteInfoPlanning
                 onStartClick={handlePlanStartRoute}

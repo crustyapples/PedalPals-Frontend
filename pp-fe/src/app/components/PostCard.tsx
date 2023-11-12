@@ -11,6 +11,8 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 import { useAuthDetails } from "../contexts/AuthContext";
 import Modal from "react-native-modal";
+import polyline from "@mapbox/polyline";
+import MapView, { PROVIDER_GOOGLE, Polyline, Marker } from 'react-native-maps';
 
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
@@ -208,6 +210,81 @@ const PostCard: React.FC<Post> = ({
     );
   };
 
+  const routeCoordinates = polyline
+  .decode(route.route_geometry)
+  .map((coordinate) => ({
+    latitude: coordinate[0],
+    longitude: coordinate[1],
+  }));
+
+  const calculateRegion = () => {
+    if (routeCoordinates.length === 0) {
+      return {
+        latitude: 0,
+        longitude: 0,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      };
+    }
+
+    const latitudes = routeCoordinates.map((coordinate) => coordinate.latitude);
+    const longitudes = routeCoordinates.map((coordinate) => coordinate.longitude);
+
+    const maxLatitude = Math.max(...latitudes);
+    const minLatitude = Math.min(...latitudes);
+    const maxLongitude = Math.max(...longitudes);
+    const minLongitude = Math.min(...longitudes);
+
+    const latitudeDelta = maxLatitude - minLatitude;
+    const longitudeDelta = maxLongitude - minLongitude;
+
+    return {
+      latitude: (maxLatitude + minLatitude) / 2,
+      longitude: (maxLongitude + minLongitude) / 2,
+      latitudeDelta,
+      longitudeDelta,
+    };
+  };
+
+  const region = calculateRegion();
+
+  const ShowMap = () => {
+
+    return(
+      <MapView
+        provider={PROVIDER_GOOGLE}
+        // style={{ flex: 1 }}
+        className = "w-full h-40 rounded-lg"
+        region={{
+          ...region,
+          // latitudeDelta: 0.0922,
+          // longitudeDelta: 0.0421,
+        }}
+        zoomEnabled={false}
+        scrollEnabled={false}
+        rotateEnabled={false}
+        pitchEnabled={false}
+        // Rotate the map according to the heading
+      >
+        {/* <Marker
+          coordinate={{
+            latitude: region.latitude,
+            longitude: region.longitude,
+          }}
+          title="My Location"
+        /> */}
+        <Polyline
+          coordinates={routeCoordinates}
+          strokeColor="#000"
+          strokeColors={['#7F0000']}
+          strokeWidth={3}
+        />
+      </MapView>
+    );
+  };
+
+
+
   return (
     <View className="bg-white p-4 rounded-lg shadow-md m-2">
       <View className="flex flex-row items-center mb-2">
@@ -230,7 +307,10 @@ const PostCard: React.FC<Post> = ({
       </Text>
 
       {/* Replace the below view with an image if available */}
-      <View className="bg-gray-200 w-full h-40 mt-2 rounded-lg mb-2" />
+      {/* <View className="bg-gray-200 w-full h-40 mt-2 rounded-lg mb-2" /> */}
+      <View className = "mt-2 mb-2">
+        <ShowMap />
+      </View>
 
       <View className="flex flex-row justify-between text-sm m-2">
         <Text className="font-Poppins_Light text-sm text-gray-600">
