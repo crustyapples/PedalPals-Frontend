@@ -55,6 +55,7 @@ export default function TabLayout() {
               </Link>              */}
             </View>
           ),
+          headerTitleAlign: "center"
         }}
       />
       <Tabs.Screen
@@ -62,6 +63,7 @@ export default function TabLayout() {
         options={{
           title: "Nearby",
           tabBarIcon: ({ color }) => <TabBarIcon name="users" color={color} />,
+          headerTitleAlign: "center"
         }}
       />
       <Tabs.Screen
@@ -71,6 +73,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="bicycle" color={color} />
           ),
+          headerTitleAlign: "center"
         }}
       />
 
@@ -87,6 +90,7 @@ export default function TabLayout() {
         options={{
           title: "Challenges",
           tabBarIcon: ({ color }) => <TabBarIcon name="trophy" color={color} />,
+          headerTitleAlign: "center"
         }}
       />
 
@@ -95,6 +99,33 @@ export default function TabLayout() {
         options={{
           title: "Profile",
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+          headerRight: () => (
+            <View className="flex-row">
+
+              <Link href="/screens/SettingsScreen" asChild>
+                <Pressable>
+                    {({ pressed }) => (
+                      <FontAwesome
+                        name="gear"
+                        size={25}
+                        color={Colors[colorScheme ?? "light"].text}
+                        style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+                      />
+                    )}
+                  </Pressable>
+
+              </Link>
+              {/* <Link href="/screens/ProfileScreen" asChild>
+                <Pressable onPress={(pressed) => {
+                    // Your onPress action here
+                  }}>
+                    <Image source={require('@/src/assets/images/notification-icon.png')} />
+                  </Pressable>
+
+              </Link>              */}
+            </View>
+          ),
+          headerTitleAlign: "center"
         }}  
       />
     </Tabs>

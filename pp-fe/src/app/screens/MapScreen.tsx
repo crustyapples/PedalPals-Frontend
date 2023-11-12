@@ -34,6 +34,8 @@ const MapPage: React.FC = () => {
   const [routeInfoActive, setRouteInfoActive] = useState(false);
   const [keyboardOffset, setKeyboardOffset] = useState(0);
   const [routePoints, setRoutePoints] = useState([]);
+  const[showBicycleRacks, setShowBicycleRacks] = useState(false);
+  const[showWaterPoint, setShowWaterPoint] = useState(false);
 
   const postSetPlanned = (state) => {
     setRoutePlanned(state);
@@ -105,6 +107,18 @@ const MapPage: React.FC = () => {
   const handleBackButton = () => {
     setRoutePlanned(false);
     setDataReceived(false);
+    setShowBicycleRacks(false);
+    setShowWaterPoint(false);
+  };
+
+  const handleBicycleRackButton = () => {
+    setShowBicycleRacks((prevShowBicycleRacks) => !prevShowBicycleRacks);
+
+  };
+
+  const handleWaterPointButton = () => {
+    setShowWaterPoint((prevShowWaterPoint) => !prevShowWaterPoint);
+
   };
 
   const handleStopRoute = () => {
@@ -171,6 +185,8 @@ const MapPage: React.FC = () => {
       setRegion({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
+        // latitude: 1.3492,
+        // longitude: 103.6845,
       });
     })();
   }, []);
@@ -199,10 +215,16 @@ const MapPage: React.FC = () => {
             region={region}
             routeCoordinates={routeCoordinates}
             routePoints={routePoints}
+            showBicycleRacks = {showBicycleRacks}
+            showWaterPoint = {showWaterPoint}
+            routePlanned = {routePlanned}
+
           />
 
           <View className="absolute top-0 left-0">
-            <MapButtons onBackClick={handleBackButton} />
+            <MapButtons onBackClick={handleBackButton} 
+            onBicycleRackClick = {handleBicycleRackButton} 
+            onWaterPointClick = {handleWaterPointButton}/>
           </View>
 
           <Animated.View
@@ -216,6 +238,11 @@ const MapPage: React.FC = () => {
           >
             {routePlanned && dataReceived ? (
               <View>
+                <View className = "bottom-48 inset-x-48">
+                  <WeatherDisplay routeData = {routeData} />
+                </View>
+                
+
                 <StartPath
                   routeSummary={routeSummary}
                   region={region}
@@ -225,7 +252,7 @@ const MapPage: React.FC = () => {
                   routeData={routeData}
                   sendRouteIdToMapScreen={processRouteIdFromStartPath}
                 />
-                <WeatherDisplay routeData = {routeData} />
+                
               </View>
             ) : (
               <RouteInfoPlanning
