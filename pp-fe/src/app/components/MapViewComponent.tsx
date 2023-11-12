@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Polyline, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 
-const MapViewComponent = ({ region, routeCoordinates, routePoints }) => {
+const MapViewComponent = ({ region, routeCoordinates, routePoints, showBicycleRacks, showWaterPoint, routePlanned }) => {
   const [heading, setHeading] = useState(0);
 
   useEffect(() => {
@@ -80,14 +80,23 @@ const MapViewComponent = ({ region, routeCoordinates, routePoints }) => {
           }}
           title="My Location"
         />
-        <Polyline
+        {routePlanned && <Polyline
           coordinates={routeCoordinates}
           strokeColor="#000"
           strokeColors={['#7F0000']}
           strokeWidth={3}
-        />
+        />}
         {routePoints.map((point) => (
-          <Marker
+          (point.type == "WaterPoint") && routePlanned && showWaterPoint && <Marker
+            key={point._id}
+            coordinate={parseCoordinates(point.coordinates)}
+            title={point.name}
+            description={point.description}
+            pinColor={getMarkerColor(point.type)}
+          />
+        ))}
+        {routePoints.map((point) => (
+          (point.type == "bikeRack") && showBicycleRacks && routePlanned && <Marker
             key={point._id}
             coordinate={parseCoordinates(point.coordinates)}
             title={point.name}
