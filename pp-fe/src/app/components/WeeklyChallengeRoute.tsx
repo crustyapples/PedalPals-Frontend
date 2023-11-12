@@ -6,77 +6,30 @@ import RouteCard from "./RouteCard";
 
 const dummyData = [
   {
-    id: 1,
-    routeName: "Ring of Fire",
-    mapImage: require("@/src/assets/images/favicon.png"),
+    route_difficulty: "Ring of Fire",
+    route_geometry: "odgGqeywRi@e@GEmAeBs@cAm@{@uAmBEIm@aAmAsBeB}CuBeEMo@KkCLgA`@cARYLUb@g@`@[mEoHWg@Q_@Ka@Es@@u@RkAXmATw@Jk@Fw@?}AM_AKe@Sm@u@wAqBgE]q@NMh@c@pAmAx@eAp@aAl@gAbAeB|AqCJO\a@t@kAxCyENWzA{BnFwIrA{AXWz@k@l@u@H_@@_@uCwEKOh@[lBgAtCaBf@[RYN]BYC]EQiDuGYm@_AkBhAq@pBmAH]Bi@A_@gFyI_AwAGKJIxB}AdDwBJITUHI|CcDPaAAaAU[i@s@MSu@uAJGEKi@qAKS?CIa@K]MSEKWw@?IIUI[OH]Rc@NYHA@_@JC@C?WF[DYB[Ai@OMKCCQQUg@?AACK]COOm@CEAIGWACOs@ACI_@?A?AQaAIc@AAG_@AOAAMoAE[Gw@Eq@GuACSAeA@oA@q@AC?G?I?C?E@eAD???J_BLuA?C^Bx@?~AAl@?Du@ZGVuA?aC\?T_Ax@RbB^`AwDTFBWD]LgA@e@@M@U?O?G?C?{@?IBS@a@C[Ag@?QGsHM?Dm@RcATq@BEZo@d@k@@Cl@i@r@a@f@SNGz@Sl@I?WPCPAEGCEEc@CWOiA@m@GOISBI@IBGBGBGR]^g@DE@AFELMTS^Yb@[|@e@`@SFADADHTIf@If@?h@FPFFKD@ZJDBF@JFTHVF\J`@JPDJ@D?D???ENPDX_ANk@fAaCtAyCDo@EQEQGKw@u@wA_@eC_AwD_B}D_BUXIVD~@?`@KjASh@[d@w@b@[TqBl@g@RUHu@XkBxAY\_AvAk@rAs@pBwFbH}CpEq@p@yBtAs@p@e@p@e@fAUfAGfC",
     distance: 22.34,
-  },
-  {
-    id: 2,
-    routeName: "Cyclone",
-    mapImage: require("@/src/assets/images/favicon.png"),
-    distance: 13.51,
-  },
-  {
-    id: 3,
-    routeName: "Tsunami",
-    mapImage: require("@/src/assets/images/favicon.png"),
-    distance: 16.81,
-  },
-  {
-    id: 1,
-    routeName: "Ring of Fire",
-    mapImage: require("@/src/assets/images/favicon.png"),
-    distance: 22.34,
-  },
-  {
-    id: 2,
-    routeName: "Cyclone",
-    mapImage: require("@/src/assets/images/favicon.png"),
-    distance: 13.51,
-  },
-  {
-    id: 3,
-    routeName: "Tsunami",
-    mapImage: require("@/src/assets/images/favicon.png"),
-    distance: 16.81,
-  },
-  // ... more dummy data
+  }
 ];
 
 const WeeklyChallengeRoute: React.FC = () => {
-  const renderItem = ({ item }) => (
-    <RouteCard
-      routeName={item.routeName}
-      mapImage={item.mapImage}
-      distance={item.distance}
-    ></RouteCard>
-  );
+
 
   return (
-    <View className="flex items-center">
-      <Text className="text-black font-Poppins_Bold text-2xl m-4">
+    <View className="flex">
+      <Text className="text-black font-Poppins_Bold text-2xl m-4 text-center">
         Weekly Challenge Routes
       </Text>
 
-      {Array.from({ length: Math.ceil(dummyData.length / 2) }).map(
-        (_, index) => (
-          <View key={index} className="flex-row justify-between mx-4">
-            <RouteCard
-              routeName={dummyData[index * 2].routeName}
-              mapImage={dummyData[index * 2].mapImage}
-              distance={dummyData[index * 2].distance}
-            />
-            {dummyData[index * 2 + 1] && (
-              <RouteCard
-                routeName={dummyData[index * 2 + 1].routeName}
-                mapImage={dummyData[index * 2 + 1].mapImage}
-                distance={dummyData[index * 2 + 1].distance}
-              />
-            )}
+      <ScrollView>
+        <View className="flex-row flex-wrap justify-center">
+        {dummyData.map((route, index) => (
+          <View style={{width:"50%"}}>
+            <RouteCard key={index} {...route} />
           </View>
-        )
-      )}
+        ))}
+        </View>
+      </ScrollView>
     </View>
   );
 };
