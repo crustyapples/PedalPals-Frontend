@@ -7,10 +7,10 @@ import WeeklyChallengeRoute from "../components/WeeklyChallengeRoute";
 
 const ChallengesPage: React.FC = () => {
   return (
-    <ScrollView>
+    <View>
       <Leaderboard />
       <WeeklyChallengeRoute />
-    </ScrollView>
+    </View>
   );
 };
 

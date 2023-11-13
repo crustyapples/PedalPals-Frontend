@@ -350,7 +350,7 @@ const PostCard: React.FC<Post> = ({
         <View >
           <PostComment />
         </View>
-        <View style={{ width: "25%" }} className="items-center">
+        <View className="items-center">
           <Text className="font-Poppins_Light text-sm text-gray-600">
             {numComments} Comments
           </Text>
