@@ -25,8 +25,8 @@ export default function MapTab() {
 
     <View>
       <MapPage 
-        pre_start_coordinates={loadedStartCoordinates}
-        pre_end_coordinates={loadedEndCoordinates}
+        pre_start_coordinates={start_coordinates}
+        pre_end_coordinates={end_coordinates}
       />
     </View>
   );
