@@ -119,11 +119,10 @@ const StartPath: React.FC<StartPathProps> = ({
         setSeconds((seconds) => seconds + 1);
 
         // Update total distance every 10 seconds
-        console.log("Seconds:", seconds);
         let distanceTravelled = calculateTotalDistance();
         distanceTravelled = distanceTravelled / 1000
         setTotalDistance(distanceTravelled);
-        console.log("Distance:", distanceTravelled);
+        
       }, 1000);
       setTimerId(id);
       setTimerStarted(true);
@@ -201,7 +200,7 @@ const StartPath: React.FC<StartPathProps> = ({
   const fetchData = async () => {
     try {
       const tempRouteData = routeData.route_summary;
-      const distanceTravelled = calculateTotalDistance();
+      const distanceTravelled = calculateTotalDistance() / 1000;
       tempRouteData.total_distance = distanceTravelled;
       tempRouteData.total_time = seconds;
       setCurrentRouteData(tempRouteData);
@@ -376,7 +375,7 @@ const StartPath: React.FC<StartPathProps> = ({
 
           <View style={{ display: timerStarted ? "flex" : "none" }}>
             <Text className="text-3xl text-center font-Poppins_Bold">
-              {(totalDistance / 1000).toFixed(2)} KM
+              {(totalDistance).toFixed(2)} KM
             </Text>
           </View>
 
