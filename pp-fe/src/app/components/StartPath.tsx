@@ -119,12 +119,11 @@ const StartPath: React.FC<StartPathProps> = ({
         setSeconds((seconds) => seconds + 1);
 
         // Update total distance every 10 seconds
-        
-        if (seconds % 10 === 0){
-          setTotalDistance(calculateTotalDistance());
-          console.log("Total Distance:", totalDistance);
-        }
-
+        console.log("Seconds:", seconds);
+        let distanceTravelled = calculateTotalDistance();
+        distanceTravelled = distanceTravelled / 1000
+        setTotalDistance(distanceTravelled);
+        console.log("Distance:", distanceTravelled);
       }, 1000);
       setTimerId(id);
       setTimerStarted(true);
