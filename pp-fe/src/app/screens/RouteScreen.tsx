@@ -139,8 +139,8 @@ const RoutePage: React.FC = () => {
     >
       <View className="flex-row flex-wrap justify-center">
         {userRoutes.map((route, index) => (
-          <View style={{ width: "50%" }}>
-            <RouteCard key={index} {...route} />
+          <View key={index} style={{ width: "50%" }}>
+            <RouteCard  {...route} />
           </View>
         ))}
       </View>

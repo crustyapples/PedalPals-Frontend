@@ -22,14 +22,14 @@ const WeeklyChallengeRoute: React.FC = () => {
       </Text>
 
       <ScrollView>
-        <View className="flex-row flex-wrap justify-center">
+      <View className="flex-row flex-wrap justify-center">
         {dummyData.map((route, index) => (
-          <View style={{width:"50%"}}>
-            <RouteCard key={index} {...route} />
+          <View key={index} style={{ width: "50%" }}>
+            <RouteCard  {...route} />
           </View>
         ))}
-        </View>
-        
+      </View>
+
       </ScrollView>
     </View>
   );

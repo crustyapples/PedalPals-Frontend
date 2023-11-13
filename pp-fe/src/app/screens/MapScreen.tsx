@@ -238,7 +238,7 @@ const MapPage: React.FC = () => {
           >
             {routePlanned && dataReceived ? (
               <View>
-                <View className = "bottom-48 inset-x-48">
+                <View className = "bottom-64 inset-x-48">
                   <WeatherDisplay routeData = {routeData} />
                 </View>
                 
