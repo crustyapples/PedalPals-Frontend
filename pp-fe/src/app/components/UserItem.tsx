@@ -1,6 +1,8 @@
-import { View, Text, Image, Button } from "react-native";
+import { View, Text, Image, Button, Pressable } from "react-native";
 import { useAuthDetails } from "../contexts/AuthContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Link } from "expo-router";
+import { FontAwesome } from "@expo/vector-icons";
 
 type UserItemProps = {
   id: number;
@@ -13,6 +15,18 @@ type UserItemProps = {
   updateFriend?: any;
 };
 
+type User = {
+  _id: string;
+  name: string;
+  email: string;
+  telegram: string;
+  instagram: string;
+  friends_list: any;
+  posts: any;
+  analytics: any;
+  gamification: any;
+};
+
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
 const UserItem: React.FC<UserItemProps> = ({
@@ -23,11 +37,11 @@ const UserItem: React.FC<UserItemProps> = ({
   isFriend,
   token,
   userId,
-  updateFriend
+  updateFriend,
 }) => {
   const [added, setAdded] = useState(isFriend);
 
-  let displayDistance = '0 km';
+  let displayDistance = "0 km";
   displayDistance = distance ? `${distance} km` : displayDistance;
 
   const addRemoveFriend = async (friendId, toAdd) => {
@@ -55,10 +69,10 @@ const UserItem: React.FC<UserItemProps> = ({
 
       if (toAdd) {
         setAdded(true);
-        updateFriend(friendId)
+        updateFriend(friendId);
       } else {
         setAdded(false);
-        updateFriend(friendId)
+        updateFriend(friendId);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -79,9 +93,7 @@ const UserItem: React.FC<UserItemProps> = ({
       </View>
       <Text className="font-semibold text-lg mb-1">{username}</Text>
 
-      
-        <Text className="text-sm text-gray-600 mb-3">{displayDistance}</Text>
-      
+      <Text className="text-sm text-gray-600 mb-3">{displayDistance}</Text>
 
       {added ? (
         <View className="bg-gray-500 w-full rounded-md shadow">
@@ -100,6 +112,19 @@ const UserItem: React.FC<UserItemProps> = ({
           />
         </View>
       )}
+      <Pressable className="mt-2">
+        <Link
+          href={{
+            pathname: "/screens/FriendScreen",
+            params: {
+              userId: id,
+              token: token,
+            },
+          }}
+        >
+          <FontAwesome name="info-circle" size={25} color="black" />
+        </Link>
+      </Pressable>
     </View>
   );
 };

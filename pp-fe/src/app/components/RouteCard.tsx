@@ -3,6 +3,7 @@ import polyline from "@mapbox/polyline";
 import MapView, { PROVIDER_GOOGLE, Polyline, Marker } from "react-native-maps";
 import { Pressable } from "react-native";
 import { Link } from "expo-router";
+import { FontAwesome } from "@expo/vector-icons";
 
 type RouteCardProps = {
   start_coordinates?: string;
@@ -112,7 +113,7 @@ const RouteCard: React.FC<RouteCardProps> = ({
         <Text className="font-Poppins_Medium text-md text-gray-800">
           {`${distance} km`}
         </Text>
-        <Pressable>
+        <Pressable className="mt-4">
           <Link
             href={{
               pathname: "/mapTab",
@@ -123,7 +124,7 @@ const RouteCard: React.FC<RouteCardProps> = ({
               },
             }}
           >
-            Go
+            <FontAwesome name="play-circle" size={25} color="black" />
           </Link>
         </Pressable>
       </View>

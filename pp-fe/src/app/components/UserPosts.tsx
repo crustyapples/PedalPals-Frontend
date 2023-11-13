@@ -36,8 +36,7 @@ type UserPostsProps = {
 const UserPosts: React.FC<UserPostsProps> = ({ socialPostData }) => {
   return (
     <View className="flex-col my-8">
-      <Text className="font-Poppins_Bold text-3xl text-black text-center">Your Posts</Text>
-      <View className="mt-8">
+      <View>
         {socialPostData.map((cycle, index) => (
           <PostCard key={index} {...cycle} />
         ))}

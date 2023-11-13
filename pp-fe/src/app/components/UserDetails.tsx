@@ -24,8 +24,9 @@ type UserDetailsProps = {
   numOfReward1: number;
   numOfReward2: number;
   numOfReward3: number;
-  token: string;
-  userId: string;
+  token?: string;
+  userId?: string;
+  friendView?: boolean;
 };
 
 const UserDetails: React.FC<UserDetailsProps> = ({
@@ -38,7 +39,8 @@ const UserDetails: React.FC<UserDetailsProps> = ({
   numOfReward2,
   numOfReward3,
   token,
-  userId
+  userId,
+  friendView
 }) => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
@@ -100,12 +102,14 @@ const UserDetails: React.FC<UserDetailsProps> = ({
         </View>
       </View>
 
-      <TouchableOpacity onPress={toggleDropdown} className="mb-4">
+      {!friendView ? (      <TouchableOpacity onPress={toggleDropdown} className="mb-4">
         <View className="flex-row justify-center items-center bg-[#2dd4bf] rounded-md p-2">
           <FontAwesome name="edit" size={20} color="white" />
           <Text className="ml-2 text-white">Edit Details</Text>
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity>): null}
+
+
 
       {/* DropdownEditDetails visibility is controlled by isDropdownVisible */}
       {isDropdownVisible && (
