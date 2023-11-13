@@ -74,8 +74,13 @@ const NearbyPage: React.FC = () => {
     const filteredUsers = allUsers.filter((user) => {
       return user.username.toLowerCase().includes(searchText.toLowerCase());
     });
-    console.log("filtered", filteredUsers);
-    setFilteredUsers(filteredUsers);
+    
+    // remove the current user from the list
+    const filteredUsersWithoutCurrentUser = filteredUsers.filter(
+      (user) => user.id !== userId
+    );
+    console.log("filtered", filteredUsersWithoutCurrentUser);
+    setFilteredUsers(filteredUsersWithoutCurrentUser);
   };
 
   const addRemoveFriend = (id) => {
