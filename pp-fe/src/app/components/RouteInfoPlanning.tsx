@@ -18,11 +18,15 @@ import PlanPathButton from "./PlanPathButton";
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
 type RouteInfoPlanningProps = {
+  pre_start_coordinates?: string;
+  pre_end_coordinates?: string;
   onStartClick: any;
   sendDataToParent2: any;
 };
 
 const RouteInfoPlanning: React.FC<RouteInfoPlanningProps> = ({
+  pre_start_coordinates,
+  pre_end_coordinates,
   onStartClick,
   sendDataToParent2,
 }) => {
@@ -57,6 +61,9 @@ const RouteInfoPlanning: React.FC<RouteInfoPlanningProps> = ({
   const [token, setToken] = useState("");
   const [isStartListVisible, setStartListVisible] = useState(false);
   const [isEndListVisible, setEndListVisible] = useState(false);
+
+  console.log(pre_start_coordinates)
+  console.log(pre_end_coordinates)
 
   const getStartSuggestionResponse = async () => {
     try {
@@ -132,7 +139,13 @@ const RouteInfoPlanning: React.FC<RouteInfoPlanningProps> = ({
       style={{ flex: 1 }}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+
+
         <View className="bg-[#2dd4bf] p-4 rounded-xl shadow-md">
+          
+          { !pre_start_coordinates && !pre_end_coordinates && (
+
+          <View>
           <View className="mb-3">
             <Text className="text-sm font-bold text-[#334155] mb-1">Start</Text>
             <TextInput
@@ -192,10 +205,14 @@ const RouteInfoPlanning: React.FC<RouteInfoPlanningProps> = ({
               />
             )}
           </View>
+          </View>)}
+
 
           {/* <PlanPathButton startAddr = {startAddr} endAddr = {endAddr}/> */}
           {/* <PlanPathButton /> */}
           <PlanPathButton
+            pre_start_coordinates={pre_start_coordinates}
+            pre_end_coordinates={pre_end_coordinates}
             startAddr={startAddr}
             endAddr={endAddr}
             onStartClick={onStartClick}

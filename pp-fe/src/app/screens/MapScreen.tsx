@@ -18,8 +18,15 @@ import StartPath from "../components/StartPath";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import RoutePosting from "../components/RoutePosting";
 import WeatherDisplay from "../components/WeatherDisplay";
+import { useIsFocused } from "@react-navigation/native";
 
-const MapPage: React.FC = () => {
+// define MapPageProps
+type MapPageProps = {
+  pre_start_coordinates?: any;
+  pre_end_coordinates?: any;
+};
+
+const MapPage: React.FC<MapPageProps> = ({pre_start_coordinates,pre_end_coordinates}) => {
   const [routePlanned, setRoutePlanned] = useState(false);
   const [dataReceived, setDataReceived] = useState(false);
   const [routeSummary, setRouteSummary] = useState("");
@@ -36,6 +43,18 @@ const MapPage: React.FC = () => {
   const [routePoints, setRoutePoints] = useState([]);
   const[showBicycleRacks, setShowBicycleRacks] = useState(false);
   const[showWaterPoint, setShowWaterPoint] = useState(false);
+  const [loadedStartCoordinates, setPreStartCoordinates] = useState(pre_start_coordinates);
+  const [loadedEndCoordinates, setPreEndCoordinates] = useState(pre_end_coordinates);
+
+  console.log("This is the start coordinates", loadedStartCoordinates);
+  console.log("This is the end coordinates", loadedEndCoordinates);
+
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    setPreEndCoordinates(pre_end_coordinates);
+    setPreStartCoordinates(pre_start_coordinates);
+  }, [isFocused]);
 
   const postSetPlanned = (state) => {
     setRoutePlanned(state);
@@ -44,45 +63,6 @@ const MapPage: React.FC = () => {
   const postSetStopped = (state) => {
     setRouteStopped(state);
   }
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      (e) => {
-        // Adjust the offset calculation as needed for your UI
-        let offset = e.endCoordinates.height;
-        setKeyboardOffset(offset);
-      }
-    );
-
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => {
-        setKeyboardOffset(0);
-      }
-    );
-
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, []);
-
-  // Position of RouteInfoPlanning
-  const routeInfoPosAnim = useRef(
-    new Animated.Value(Dimensions.get("window").height)
-  ).current; // start off-screen
-
-  // Function to activate the RouteInfoPlanning and animate its position
-  const activateRouteInfo = () => {
-    setRouteInfoActive(true);
-
-    Animated.timing(routeInfoPosAnim, {
-      toValue: Dimensions.get("window").height / 2, // Moves to the middle of the screen
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  };
 
   // Set up an Animated.Value for the X position
   const routeInfoAnim = useRef(new Animated.Value(0)).current; // start fully visible
@@ -108,6 +88,8 @@ const MapPage: React.FC = () => {
     setRoutePlanned(false);
     setDataReceived(false);
     setShowBicycleRacks(false);
+    setPreStartCoordinates("");
+    setPreEndCoordinates("");
     setShowWaterPoint(false);
   };
 
@@ -256,6 +238,8 @@ const MapPage: React.FC = () => {
               </View>
             ) : (
               <RouteInfoPlanning
+                pre_start_coordinates={loadedStartCoordinates}
+                pre_end_coordinates={loadedEndCoordinates}
                 onStartClick={handlePlanStartRoute}
                 sendDataToParent2={processDataFromParent1}
               />

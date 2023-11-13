@@ -1,13 +1,20 @@
-import { StyleSheet } from 'react-native';
 import MapPage from '../screens/MapScreen';
-import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from 'react-native';
-
-
-
+import { useNavigation, useRouter, useLocalSearchParams } from "expo-router";
+import React, { useState, useEffect } from "react";
 
 
 export default function MapTab() {
+  const navigation = useNavigation();
+  const router = useRouter();
+  const params = useLocalSearchParams();
+  const { start_coordinates, end_coordinates } = params;
+  const [loadedStartCoordinates, setPreStartCoordinates] = useState(start_coordinates);
+  const [loadedEndCoordinates, setPreEndCoordinates] = useState(end_coordinates);
+
+  console.log("This is the start coordinates", loadedStartCoordinates);
+  console.log("This is the end coordinates", loadedEndCoordinates);
+
   return (
     // <View style={styles.container}>
     //   <Text style={styles.title}>Maps Page goes here</Text>
@@ -17,24 +24,10 @@ export default function MapTab() {
     // </View>
 
     <View>
-      <MapPage />
+      <MapPage 
+        pre_start_coordinates={loadedStartCoordinates}
+        pre_end_coordinates={loadedEndCoordinates}
+      />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});

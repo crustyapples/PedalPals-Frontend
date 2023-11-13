@@ -10,6 +10,8 @@ import { Picker } from "@react-native-picker/picker";
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
 type PlanPathButtonProps = {
+  pre_start_coordinates?: string;
+  pre_end_coordinates?: string;
   startAddr: any[];
   endAddr: any[];
   sendDataToParent1: any;
@@ -17,6 +19,8 @@ type PlanPathButtonProps = {
 };
 
 const PlanPathButton: React.FC<PlanPathButtonProps> = ({
+  pre_start_coordinates,
+  pre_end_coordinates,
   startAddr,
   endAddr,
   sendDataToParent1,
@@ -107,8 +111,25 @@ const PlanPathButton: React.FC<PlanPathButtonProps> = ({
   };
 
   const handleButtonPress = () => {
-    fetchData();
-    onStartClick();
+    if (pre_start_coordinates && pre_end_coordinates) {
+      console.log("This is pre start coordinates", pre_start_coordinates);
+      console.log("This is pre end coordinates", pre_end_coordinates);
+      // add a character to the start and end of the strings
+      // so that they can be parsed by the backend
+
+      pre_start_coordinates = '"' + pre_start_coordinates + '"';
+      pre_end_coordinates = '"' + pre_end_coordinates + '"';
+
+      getRoute(pre_start_coordinates, pre_end_coordinates).then(() => {
+        onStartClick();
+      })
+
+      return;
+    } else {
+      fetchData();
+      onStartClick();
+    }
+
   };
 
   useEffect(() => {}, []);

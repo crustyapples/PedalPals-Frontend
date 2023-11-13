@@ -1,14 +1,20 @@
 import { Text, View, Image } from "react-native";
 import polyline from "@mapbox/polyline";
-import MapView, { PROVIDER_GOOGLE, Polyline, Marker } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Polyline, Marker } from "react-native-maps";
+import { Pressable } from "react-native";
+import { Link } from "expo-router";
 
 type RouteCardProps = {
+  start_coordinates?: string;
+  end_coordinates?: string;
   route_difficulty: any;
   distance: number;
   route_geometry: string;
 };
 
 const RouteCard: React.FC<RouteCardProps> = ({
+  start_coordinates,
+  end_coordinates,
   route_difficulty,
   distance,
   route_geometry,
@@ -19,7 +25,6 @@ const RouteCard: React.FC<RouteCardProps> = ({
       latitude: coordinate[0],
       longitude: coordinate[1],
     }));
-
 
   const calculateRegion = () => {
     if (routeCoordinates.length === 0) {
@@ -88,6 +93,8 @@ const RouteCard: React.FC<RouteCardProps> = ({
     );
   };
 
+  // console.log("This is the route geometry", route_geometry);
+
   return (
     <View className="flex-col items-center p-4 bg-white shadow-md rounded-lg m-3">
       <Text className="text-center font-Poppins_Bold text-lg text-black mb-2">
@@ -95,7 +102,7 @@ const RouteCard: React.FC<RouteCardProps> = ({
       </Text>
 
       <View className="flex-row items-center justify-center mb-3">
-        <ShowMap />              
+        <ShowMap />
       </View>
 
       <View className="flex-col items-center">
@@ -105,6 +112,20 @@ const RouteCard: React.FC<RouteCardProps> = ({
         <Text className="font-Poppins_Medium text-md text-gray-800">
           {`${distance} km`}
         </Text>
+        <Pressable>
+          <Link
+            href={{
+              pathname: "/mapTab",
+              // /* 1. Navigate to the details route with query params */
+              params: {
+                start_coordinates: start_coordinates,
+                end_coordinates: end_coordinates,
+              },
+            }}
+          >
+            Go
+          </Link>
+        </Pressable>
       </View>
     </View>
   );
