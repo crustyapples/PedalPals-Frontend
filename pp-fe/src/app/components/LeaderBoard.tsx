@@ -37,6 +37,8 @@ const LeaderBoard: React.FC = () => {
 
               console.log(fetchedLeaderboard);
               console.log(fetchedUserData.friends_list);
+              // push current user id to fetchedUserData.friends_list
+              fetchedUserData.friends_list.push(userId);
               const filteredLeaderboard = fetchedLeaderboard.filter((user) => {
                 return fetchedUserData.friends_list.includes(user.id);
               });
