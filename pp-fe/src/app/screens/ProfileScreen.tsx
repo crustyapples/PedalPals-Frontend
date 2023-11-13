@@ -13,8 +13,8 @@ type User = {
   _id: string;
   name: string;
   email: string;
-  teleHandle: string;
-  instaHandle: string;
+  telegram: string;
+  instagram: string;
   friends_list: any;
   posts: any;
   analytics: any;
@@ -94,11 +94,14 @@ const ProfilePage: React.FC = () => {
           <UserDetails
             username={userData.name}
             numOfPals={userData.friends_list.length}
-            teleHandle={userData.teleHandle || "@thelegend27"}
-            instaHandle={userData.instaHandle || "@thelegend27"}
+            teleHandle={userData.telegram || "@thelegend27"}
+            instaHandle={userData.instagram || "@thelegend27"}
             numOfReward1={badgeCounts.bronze}
             numOfReward2={badgeCounts.silver}
             numOfReward3={badgeCounts.gold}
+            token={token}
+            userId={userId}
+
           />
           <UserStats
             totalDistanceTravelled={userData.analytics.total_distance}

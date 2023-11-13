@@ -24,6 +24,8 @@ type UserDetailsProps = {
   numOfReward1: number;
   numOfReward2: number;
   numOfReward3: number;
+  token: string;
+  userId: string;
 };
 
 const UserDetails: React.FC<UserDetailsProps> = ({
@@ -35,6 +37,8 @@ const UserDetails: React.FC<UserDetailsProps> = ({
   numOfReward1,
   numOfReward2,
   numOfReward3,
+  token,
+  userId
 }) => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
@@ -110,6 +114,8 @@ const UserDetails: React.FC<UserDetailsProps> = ({
             visible: isDropdownVisible,
             setVisible: setIsDropdownVisible,
           }}
+          token={token}
+          userId={userId}
         />
       )}
 
