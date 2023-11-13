@@ -96,9 +96,7 @@ const StartPath: React.FC<StartPathProps> = ({
     const distance = R * c; // in meters
     return distance;
   };
-  
-  // Replace the calculateTotalDistance function with the following:
-  
+    
   const calculateTotalDistance = () => {
     let totalDistance = 0;
     for (let i = 1; i < locations.length; i++) {
@@ -119,6 +117,14 @@ const StartPath: React.FC<StartPathProps> = ({
     if (!timerId) {
       const id = setInterval(() => {
         setSeconds((seconds) => seconds + 1);
+
+        // Update total distance every 10 seconds
+        
+        if (seconds % 10 === 0){
+          setTotalDistance(calculateTotalDistance());
+          console.log("Total Distance:", totalDistance);
+        }
+
       }, 1000);
       setTimerId(id);
       setTimerStarted(true);

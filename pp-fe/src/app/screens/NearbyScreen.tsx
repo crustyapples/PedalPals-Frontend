@@ -71,14 +71,15 @@ const NearbyPage: React.FC = () => {
 
   const handleSearch = (searchText, allUsers) => {
     console.log(searchText);
-    const filteredUsers = allUsers.filter((user) => {
+    const filteredUsersList = allUsers.filter((user) => {
       return user.username.toLowerCase().includes(searchText.toLowerCase());
     });
     
     // remove the current user from the list
-    const filteredUsersWithoutCurrentUser = filteredUsers.filter(
+    const filteredUsersWithoutCurrentUser = filteredUsersList.filter(
       (user) => user.id !== userId
     );
+    
     console.log("filtered", filteredUsersWithoutCurrentUser);
     setFilteredUsers(filteredUsersWithoutCurrentUser);
   };

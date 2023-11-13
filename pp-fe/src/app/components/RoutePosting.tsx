@@ -145,7 +145,6 @@ const RoutePosting: React.FC<RoutePostingProps> = ({
         className="bg-white rounded-lg p-2 h-16 mt-2 border break-all text-gray-600 border-gray-400"
         placeholder="How'd it go? Share more about your activity to your pals!"
         value={caption}
-        multiline = {true}
         onChangeText={(caption) => {
           setCaption(caption);
         }}
