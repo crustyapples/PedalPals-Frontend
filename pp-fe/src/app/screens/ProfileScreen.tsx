@@ -4,6 +4,8 @@ import UserDetails from '../components/UserDetails';
 import UserStats from '../components/UserStats';
 import UserPosts from '../components/UserPosts';
 import { useAuthDetails } from '../contexts/AuthContext';
+import { useNavigation } from '@react-navigation/native';
+import { useLayoutEffect } from 'react';
 
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
@@ -20,6 +22,13 @@ type User = {
 };
 
 const ProfilePage: React.FC = () => {
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({ title: "Profile" });
+  }, [navigation]);
+
+
   const { getToken, getUserId } = useAuthDetails();
   const [token, setToken] = useState('');
   const [userId, setUserId] = useState('');
