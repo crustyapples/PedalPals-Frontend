@@ -26,6 +26,7 @@ type Post = {
   route: Route;
   timestamp: string;
   user: string;
+  user_id: string;
 }
 
 const HomePage: React.FC = () => {

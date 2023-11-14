@@ -36,6 +36,7 @@ type Post = {
   route: Route;
   timestamp: string;
   user: string;
+  user_id: string;
   avatar: any;
 };
 
@@ -47,6 +48,7 @@ const PostCard: React.FC<Post> = ({
   comments,
   likes,
   avatar,
+  user_id,
   timestamp,
 }) => {
   const { getToken, getUserId } = useAuthDetails();
@@ -65,7 +67,7 @@ const PostCard: React.FC<Post> = ({
     return (distanceInKm * 0.621371).toFixed(2);
   };
 
-  const colors = ["#b4cce9", "#b4e9bc", "#d9f892", "#f1b0c6"];
+  const colors = ["orange", "red", "blue", "green"];
 
   function randomInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -322,12 +324,12 @@ const PostCard: React.FC<Post> = ({
               href={{
                 pathname: "/screens/FriendScreen",
                 params: {
-                  userId: userId,
+                  userId: user_id,
                   token: token,
                 },
               }}
             >
-            <View className={`w-8 h-8 rounded-full bg-[${colors[stringToIndex(user)]}]`} />
+            <View className={`w-8 h-8 rounded-full bg-${colors[stringToIndex(user)]}-300`} />
             </Link>
           </Pressable>
           )}

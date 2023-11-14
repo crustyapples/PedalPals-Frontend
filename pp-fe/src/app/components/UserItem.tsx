@@ -30,7 +30,7 @@ type User = {
 };
 
 
-const colors = ['#b4cce9', '#b4e9bc', '#d9f892', '#f1b0c6'];
+const colors = ["orange", "red", "blue", "green"];
 
 
 function randomInteger(min, max) {
@@ -117,7 +117,7 @@ const UserItem: React.FC<UserItemProps> = ({
             className="w-20 h-20 rounded-full border-2 border-gray-200 shadow-sm"
           />
         ) : (
-          <View className={`w-20 h-20 rounded-full bg-[${colors[stringToIndex(username)]}]`} />
+          <View className={`w-20 h-20 rounded-full bg-${colors[stringToIndex(username)]}-300`} />
         )}
       </View>
       <Text className="font-semibold text-lg mb-1">{username}</Text>
