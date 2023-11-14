@@ -26,6 +26,11 @@ type Route = {
   end_coordinates: string;
   route_difficulty: string;
   route_geometry: string;
+  date?: string;
+  route_summary?: {
+    start_point: string;
+    end_point: string;
+  };
 };
 
 type Post = {
@@ -75,7 +80,7 @@ const PostCard: React.FC<Post> = ({
   function stringToIndex(str) {
     let sum = 0;
     for (let i = 0; i < str.length; i++) {
-        sum += str.charCodeAt(i);
+      sum += str.charCodeAt(i);
     }
     return sum % 4;
   }
@@ -320,22 +325,31 @@ const PostCard: React.FC<Post> = ({
             />
           ) : (
             <Pressable className="mt-2">
-            <Link
-              href={{
-                pathname: "/screens/FriendScreen",
-                params: {
-                  userId: user_id,
-                  token: token,
-                },
-              }}
-            >
-            <View className={`w-8 h-8 rounded-full bg-${colors[stringToIndex(user)]}-300`} />
-            </Link>
-          </Pressable>
+              <Link
+                href={{
+                  pathname: "/screens/FriendScreen",
+                  params: {
+                    userId: user_id,
+                    token: token,
+                  },
+                }}
+              >
+                <View
+                  className={`w-8 h-8 rounded-full bg-${
+                    colors[stringToIndex(user)]
+                  }-300`}
+                />
+              </Link>
+            </Pressable>
           )}
         </View>
         <View className="ml-2 mb-2">
           <Text className="font-semibold">{user}</Text>
+        </View>
+        <View>
+          <Text className="ml-8 mb-2 font-light text-sm">
+            {timestamp.slice()}
+          </Text>
         </View>
       </View>
       <Text className="ml-2 mb-2 font-Poppins_Light font-bold text-xl">
@@ -345,52 +359,49 @@ const PostCard: React.FC<Post> = ({
       {/* Replace the below view with an image if available */}
       {/* <View className="bg-gray-200 w-full h-40 mt-2 rounded-lg mb-2" /> */}
       <View className="mt-2 mb-2">
-        
         <ShowMap />
-        <Pressable className="mt-4">
-          <Link
-            href={{
-              pathname: "/mapTab",
-              // /* 1. Navigate to the details route with query params */
-              params: {
-                start_coordinates: route.start_coordinates,
-                end_coordinates: route.end_coordinates,
-              },
-            }}
-          >
-            <FontAwesome name="play-circle" size={25} color="black" />
-          </Link>
-        </Pressable>
-      </View>
 
-      <View className="flex flex-row justify-between text-sm m-2">
-        <Text className="font-Poppins_Light text-sm text-gray-600">
-          Distance
-          <Text className="font-Poppins_Light text-sm font-bold">
-            {distanceUnit === "miles"
-              ? ` ${convertToMiles(route.distance)} mi`
-              : ` ${route.distance.toFixed(2)} km`}
+        {route.route_summary && (
+          <View className="flex mt-2">
+            <Text className="font-Poppins_Bold text-gray-600">
+              START:{" "}
+              <Text className="font-light text-sm text-gray-400">
+                {route.route_summary?.start_point}
+              </Text>
+            </Text>
+            <Text className="font-Poppins_Bold text-gray-600">
+              END:{" "}
+              <Text className="font-light text-sm text-gray-400">
+                {route.route_summary?.end_point}
+              </Text>
+            </Text>
+          </View>
+        )}
+
+        <View className="flex flex-row justify-between text-sm mt-2">
+          <Text className="font-Poppins_Light text-sm text-gray-600">
+            Distance
+            <Text className="font-Poppins_Light text-sm font-bold">
+              {distanceUnit === "miles"
+                ? ` ${convertToMiles(route.distance)} mi`
+                : ` ${route.distance.toFixed(2)} km`}
+            </Text>
           </Text>
-        </Text>
-        <Text className="font-Poppins_Light text-sm text-gray-600">
-          Time
-          <Text className="font-Poppins_Light text-sm font-bold">
-            {` ${route.time} min`}
+          <Text className="font-Poppins_Light text-sm text-gray-600">
+            Time
+            <Text className="font-Poppins_Light text-sm font-bold">
+              {` ${route.time} min`}
+            </Text>
           </Text>
-        </Text>
-        <Text className="font-Poppins_Light text-sm text-gray-600">
-          Speed
-          <Text className="font-Poppins_Light text-sm font-bold">
-            {distanceUnit === "miles"
-              ? ` ${convertToMiles(route.distance / (route.time / 60))} mph`
-              : ` ${(route.distance / (route.time / 60)).toFixed(2)} km/h`}
+          <Text className="font-Poppins_Light text-sm text-gray-600">
+            Speed
+            <Text className="font-Poppins_Light text-sm font-bold">
+              {distanceUnit === "miles"
+                ? ` ${convertToMiles(route.distance / (route.time / 60))} mph`
+                : ` ${(route.distance / (route.time / 60)).toFixed(2)} km/h`}
+            </Text>
           </Text>
-        </Text>
-        {/* <Text>Distance: {route.distance} km</Text> */}
-        {/* <Text>Time: {route.time} min</Text>
-        <Text>
-          Speed: {(route.distance / (route.time / 60)).toFixed(2)} km/h
-        </Text> */}
+        </View>
       </View>
 
       <View className="flex-row items-center justify-start">
@@ -409,6 +420,22 @@ const PostCard: React.FC<Post> = ({
           <Text className="font-Poppins_Light text-sm text-gray-600">
             {numComments} Comments
           </Text>
+        </View>
+        <View>
+          <Pressable className="ml-28">
+            <Link
+              href={{
+                pathname: "/mapTab",
+                // /* 1. Navigate to the details route with query params */
+                params: {
+                  start_coordinates: route.start_coordinates,
+                  end_coordinates: route.end_coordinates,
+                },
+              }}
+            >
+              <FontAwesome name="play-circle" size={25} color="black" />
+            </Link>
+          </Pressable>
         </View>
       </View>
     </View>

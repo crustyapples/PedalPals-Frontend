@@ -26,7 +26,10 @@ type MapPageProps = {
   pre_end_coordinates?: any;
 };
 
-const MapPage: React.FC<MapPageProps> = ({pre_start_coordinates,pre_end_coordinates}) => {
+const MapPage: React.FC<MapPageProps> = ({
+  pre_start_coordinates,
+  pre_end_coordinates,
+}) => {
   const [routePlanned, setRoutePlanned] = useState(false);
   const [dataReceived, setDataReceived] = useState(false);
   const [routeSummary, setRouteSummary] = useState("");
@@ -41,10 +44,13 @@ const MapPage: React.FC<MapPageProps> = ({pre_start_coordinates,pre_end_coordina
   const [routeInfoActive, setRouteInfoActive] = useState(false);
   const [keyboardOffset, setKeyboardOffset] = useState(0);
   const [routePoints, setRoutePoints] = useState([]);
-  const[showBicycleRacks, setShowBicycleRacks] = useState(false);
-  const[showWaterPoint, setShowWaterPoint] = useState(false);
-  const [loadedStartCoordinates, setPreStartCoordinates] = useState(pre_start_coordinates);
-  const [loadedEndCoordinates, setPreEndCoordinates] = useState(pre_end_coordinates);
+  const [showBicycleRacks, setShowBicycleRacks] = useState(false);
+  const [showWaterPoint, setShowWaterPoint] = useState(false);
+  const [loadedStartCoordinates, setPreStartCoordinates] = useState(
+    pre_start_coordinates
+  );
+  const [loadedEndCoordinates, setPreEndCoordinates] =
+    useState(pre_end_coordinates);
 
   console.log("This is the start coordinates", loadedStartCoordinates);
   console.log("This is the end coordinates", loadedEndCoordinates);
@@ -58,11 +64,11 @@ const MapPage: React.FC<MapPageProps> = ({pre_start_coordinates,pre_end_coordina
 
   const postSetPlanned = (state) => {
     setRoutePlanned(state);
-  }
+  };
 
   const postSetStopped = (state) => {
     setRouteStopped(state);
-  }
+  };
 
   // Set up an Animated.Value for the X position
   const routeInfoAnim = useRef(new Animated.Value(0)).current; // start fully visible
@@ -95,12 +101,10 @@ const MapPage: React.FC<MapPageProps> = ({pre_start_coordinates,pre_end_coordina
 
   const handleBicycleRackButton = () => {
     setShowBicycleRacks((prevShowBicycleRacks) => !prevShowBicycleRacks);
-
   };
 
   const handleWaterPointButton = () => {
     setShowWaterPoint((prevShowWaterPoint) => !prevShowWaterPoint);
-
   };
 
   const handleStopRoute = () => {
@@ -187,7 +191,7 @@ const MapPage: React.FC<MapPageProps> = ({pre_start_coordinates,pre_end_coordina
             time={timeTaken}
             routeData={routeData}
             routeId={routeId}
-            routeCoordinates = {routeCoordinates}
+            routeCoordinates={routeCoordinates}
             setRoutePlanned={postSetPlanned}
             setRouteStopped={postSetStopped}
           />
@@ -198,16 +202,17 @@ const MapPage: React.FC<MapPageProps> = ({pre_start_coordinates,pre_end_coordina
             region={region}
             routeCoordinates={routeCoordinates}
             routePoints={routePoints}
-            showBicycleRacks = {showBicycleRacks}
-            showWaterPoint = {showWaterPoint}
-            routePlanned = {routePlanned}
-
+            showBicycleRacks={showBicycleRacks}
+            showWaterPoint={showWaterPoint}
+            routePlanned={routePlanned}
           />
 
           <View className="absolute top-0 left-0">
-            <MapButtons onBackClick={handleBackButton} 
-            onBicycleRackClick = {handleBicycleRackButton} 
-            onWaterPointClick = {handleWaterPointButton}/>
+            <MapButtons
+              onBackClick={handleBackButton}
+              onBicycleRackClick={handleBicycleRackButton}
+              onWaterPointClick={handleWaterPointButton}
+            />
           </View>
 
           <Animated.View
@@ -221,10 +226,9 @@ const MapPage: React.FC<MapPageProps> = ({pre_start_coordinates,pre_end_coordina
           >
             {routePlanned && dataReceived ? (
               <View>
-                <View className = "bottom-64 inset-x-48">
-                  <WeatherDisplay routeData = {routeData} />
+                <View className="bottom-64 inset-x-48">
+                  <WeatherDisplay routeData={routeData} />
                 </View>
-                
 
                 <StartPath
                   routeSummary={routeSummary}
@@ -235,7 +239,6 @@ const MapPage: React.FC<MapPageProps> = ({pre_start_coordinates,pre_end_coordina
                   routeData={routeData}
                   sendRouteIdToMapScreen={processRouteIdFromStartPath}
                 />
-                
               </View>
             ) : (
               <RouteInfoPlanning

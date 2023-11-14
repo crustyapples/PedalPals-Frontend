@@ -10,6 +10,11 @@ type Route = {
   time: number;
   route_geometry: string;
   route_difficulty: string;
+  date?: string;
+  route_summary?: {
+    start_point: string;
+    end_point: string;
+  }
 };
 
 type User = {
@@ -139,7 +144,7 @@ const RoutePage: React.FC = () => {
     >
       <View className="flex-row flex-wrap justify-center">
         {userRoutes.map((route, index) => (
-          <View key={index} style={{ width: "50%" }}>
+          <View key={index} >
             <RouteCard  {...route} />
           </View>
         ))}
