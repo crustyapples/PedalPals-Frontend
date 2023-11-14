@@ -73,7 +73,7 @@ const PostCard: React.FC<Post> = ({
   };
 
   const colors = ["orange", "red", "blue", "green"];
-
+  const colors2 = ["#98b5df", "#98dfc0", "#df98d6", "#dfbd98"];
   function randomInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
@@ -335,9 +335,9 @@ const PostCard: React.FC<Post> = ({
                 }}
               >
                 <View
-                  className={`w-8 h-8 rounded-full bg-${
-                    colors[stringToIndex(user)]
-                  }-300`}
+                  className={`w-8 h-8 rounded-full bg-[${
+                    colors2[stringToIndex(user)]
+                  }]`}
                 />
               </Link>
             </Pressable>
