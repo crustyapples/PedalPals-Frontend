@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
-import Swiper from 'react-native-swiper';
+import React, { useState, useEffect } from "react";
+import { View, Text, Image, StyleSheet, Pressable } from "react-native";
+import Swiper from "react-native-swiper";
 
 const GetStarted = ({ onPressGsButton }) => {
   const [currentIndex, setCurrentIndex] = useState(1);
@@ -14,45 +14,58 @@ const GetStarted = ({ onPressGsButton }) => {
   }, [currentIndex]);
 
   const slides = [
-    { image: require("@/src/assets/images/cycle-1.png"), caption: "Manage your Cycling Activities All in One Place" },
-    { image: require("@/src/assets/images/cycle-2.jpg"), caption: "Socialise with other cyclists" },
-    { image: require("@/src/assets/images/cycle-3.jpg"), caption: "Caption 3"}
+    {
+      image: require("@/src/assets/images/cycle-1.png"),
+      caption: "Manage your Cycling Activities All in One Place",
+    },
+    {
+      image: require("@/src/assets/images/cycle-2.jpg"),
+      caption: "Socialise with other cyclists",
+    },
+    { image: require("@/src/assets/images/cycle-3.jpg"), caption: "Caption 3" },
   ];
 
-
   return (
-    <View className = "h-screen">
-        <View className = "flex-1 flex-col">
-            <Swiper loop={false} showsButtons={false} showsPagination={true} paginationStyle={{ bottom: 10 }}>
-            {slides.map((slide, index) => (
-                <View key={index}>
-                    <View className = "h-3/4"  >
-                        <View className = "">
-                        {/* <Text className='font-bold text-5xl text-center mb-12'>PedalPals</Text> */}
-                            <Image className = "object-cover w-full h-full" source={slide.image}  />
-                        </View>
-                    </View>
-
-                    <View className="h-1/4 items-center justify-center"  key={`${index}-caption`}>
-                            <Text className = "text-center text-base">{slide.caption}</Text>
-                        </View>
-
+    <View className="h-screen">
+      <View className="flex-1 flex-col">
+        <Swiper
+          loop={false}
+          showsButtons={false}
+          showsPagination={true}
+          paginationStyle={{ bottom: 10 }}
+        >
+          {slides.map((slide, index) => (
+            <View key={index}>
+              <View className="h-3/4">
+                <View className="">
+                  {/* <Text className='font-bold text-5xl text-center mb-12'>PedalPals</Text> */}
+                  <Image
+                    className="object-cover w-full h-full"
+                    source={slide.image}
+                  />
                 </View>
-            ))}
-            </Swiper>
-        </View>
+              </View>
 
-        <View className="ml-4 mr-4">
-            <Pressable onPress={onPressGsButton}>
-                <View className="bg-gray-200 h-16 w-full items-center justify-center mb-16 rounded-lg">
-                    <Text className = "text-center font-bold text-2xl">Get Started</Text>
-                </View>
-            </Pressable>
-        </View>
-        
+              <View
+                className="h-1/4 items-center justify-center"
+                key={`${index}-caption`}
+              >
+                <Text className="text-center text-base">{slide.caption}</Text>
+              </View>
+            </View>
+          ))}
+        </Swiper>
+      </View>
+
+      <View className="ml-4 mr-4">
+        <Pressable onPress={onPressGsButton}>
+          <View className="bg-gray-200 h-16 w-full items-center justify-center mb-16 rounded-lg">
+            <Text className="text-center font-bold text-2xl">Get Started</Text>
+          </View>
+        </Pressable>
+      </View>
     </View>
   );
 };
-
 
 export default GetStarted;
