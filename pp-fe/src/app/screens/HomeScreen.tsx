@@ -24,7 +24,7 @@ type Post = {
   comments: any;
   likes: any;
   route: Route;
-  timestamp: string;
+  timestamp: number;
   user: string;
   user_id: string;
 }
@@ -52,7 +52,10 @@ const HomePage: React.FC = () => {
 
       const data = await response.json();
       const filteredData = data.filter((post) => post.user_id !== userId);
-      console.log(filteredData);
+
+      // reverse the order of the posts so that the most recent post is at the top
+      filteredData.reverse();
+
       setPosts(filteredData);
     } catch (error) {
       console.error("Network error", error);

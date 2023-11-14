@@ -115,8 +115,9 @@ const MapPage: React.FC<MapPageProps> = ({pre_start_coordinates,pre_end_coordina
     console.log("Data Received in Parent 2:", data);
     if (data && data.route_geometry && data.route_summary) {
       setRouteData(data);
-      console.log("This is route data from parent 1", routeData);
+      // console.log("This is route data from parent 1", routeData);
       setRG(data.route_geometry);
+      console.log("This is route geometry from parent 1", data.route_geometry);
       setRouteSummary(data.route_summary);
       setRoutePoints(data.route_points);
       setDataReceived(true);

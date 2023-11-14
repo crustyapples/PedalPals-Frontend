@@ -345,7 +345,22 @@ const PostCard: React.FC<Post> = ({
       {/* Replace the below view with an image if available */}
       {/* <View className="bg-gray-200 w-full h-40 mt-2 rounded-lg mb-2" /> */}
       <View className="mt-2 mb-2">
+        
         <ShowMap />
+        <Pressable className="mt-4">
+          <Link
+            href={{
+              pathname: "/mapTab",
+              // /* 1. Navigate to the details route with query params */
+              params: {
+                start_coordinates: route.start_coordinates,
+                end_coordinates: route.end_coordinates,
+              },
+            }}
+          >
+            <FontAwesome name="play-circle" size={25} color="black" />
+          </Link>
+        </Pressable>
       </View>
 
       <View className="flex flex-row justify-between text-sm m-2">
