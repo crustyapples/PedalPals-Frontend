@@ -250,7 +250,7 @@ const NearbyPage: React.FC = () => {
     getAllUsers().then((data) => {
       handleSearch(searchedUser, data);
     });
-  }, [searchedUser]);
+  }, [token,userId]);
 
   return (
     <ScrollView
