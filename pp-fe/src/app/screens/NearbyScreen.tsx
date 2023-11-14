@@ -13,6 +13,7 @@ import UserItem from "@/src/app/components/UserItem";
 import { useAuthDetails } from "../contexts/AuthContext";
 import * as Location from "expo-location";
 import axios from "axios";
+import { useDistanceUnit } from '../contexts/DistanceUnitContext';
 
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
@@ -57,6 +58,14 @@ const NearbyPage: React.FC = () => {
   const [searchedUser, setSearchedUser] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+
+  const { distanceUnit, toggleDistanceUnit } = useDistanceUnit();
+  // console.log("User specified unit", distanceUnit);
+
+  const convertToMiles = (distanceInKm) => {
+    // Conversion factor: 1 kilometer = 0.621371 miles
+    return (distanceInKm * 0.621371).toFixed(2);
+  };
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
@@ -308,9 +317,12 @@ const NearbyPage: React.FC = () => {
 
           {activeTab === "nearby" && (
             <>
-              <Text className="mb-2">{`Distance: ${Math.round(
-                distance
-              )} km`}</Text>
+              <Text className="mb-2">
+                Distance:
+                {distanceUnit === 'miles'
+            ? ` ${convertToMiles(distance)} mi`
+            : ` ${Math.round(distance)} km`}
+                </Text>
               <Slider
                 minimumValue={0}
                 maximumValue={10}

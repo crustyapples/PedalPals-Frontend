@@ -47,13 +47,67 @@ const AuthScreen = () => {
         setIsLogin(true);
         return;
       }
+
       else if (response.data && response.data.access_token) {
         console.log('Authentication successful!', response.data.access_token);
         login(response.data.access_token, email, response.data.user_id);
         console.log(response.data.user_id);
         console.log(email);
+        
       } else {
-        Alert.alert('Authentication failed', 'Please check your credentials');
+
+        if (response.data.error === 'Please fill in all the text fields'){
+          Alert.alert('Please fill in all the text fields');
+        }
+
+        else if (response.data.error === 'Username must contain only alphanumeric characters'){
+          Alert.alert('Username invalid');
+        }
+
+        else if (response.data.error === 'Please choose another username'){
+          Alert.alert('Username already taken! Please input another username');
+        }
+
+        else if (response.data.error === 'Username should be between 1 and 10 characters'){
+          Alert.alert('Username should be between 1 and 10 characters');
+        }
+
+        else if (response.data.error === 'Please choose another username'){
+          Alert.alert('Username already taken! Please input another username');
+        }
+
+        else if (response.data.error === 'Email invalid'){
+          Alert.alert('Invalid Email Address');
+        }
+
+        else if (response.data.error === 'Email already registered'){
+          Alert.alert('Email already registered');
+        }
+
+        else if (response.data.error === 'Invalid password. Your password should be between 8 and 512 characters'){
+          Alert.alert('Invalid password. Your password should be between 8 and 512 characters');
+        }
+
+        else if (response.data.error === 'Invalid password. Your password should contain alphanumeric characters only'){
+          Alert.alert('Invalid password. Your password should contain alphanumeric characters only');
+        }
+
+        else if (response.data.error === 'Invalid password. Your password should not be the same as your username'){
+          Alert.alert('Invalid password. Your password should not be the same as your username');
+        }
+
+        else if (response.data.error === 'User not registered'){
+          Alert.alert('User not registered');
+        }
+
+        else if (response.data.error === 'Invalid password'){
+          Alert.alert('Invalid password');
+        }
+
+        else{
+          Alert.alert('Authentication failed', 'Please check your credentials');
+        }
+       
       }
     } catch (error) {
       console.error('Authentication error', error);

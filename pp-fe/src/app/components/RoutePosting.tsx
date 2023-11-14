@@ -8,6 +8,7 @@ import MapViewComponent from "./MapViewComponent";
 import PostCard from "./PostCard";
 import { useAuthDetails } from "../contexts/AuthContext";
 import MapView, { PROVIDER_GOOGLE, Polyline, Marker } from 'react-native-maps';
+import { useDistanceUnit } from '../contexts/DistanceUnitContext';
 
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
@@ -36,6 +37,14 @@ const RoutePosting: React.FC<RoutePostingProps> = ({
   const [token, setToken] = useState("");
   // console.log("Received Route Data", routeData)
   console.log("Route Id received by RoutePosting", routeId);
+
+  const { distanceUnit, toggleDistanceUnit } = useDistanceUnit();
+  console.log("User specified unit", distanceUnit);
+
+  const convertToMiles = (distanceInKm) => {
+    // Conversion factor: 1 kilometer = 0.621371 miles
+    return (distanceInKm * 0.621371).toFixed(2);
+  };
 
   const calculateRegion = () => {
     if (routeCoordinates.length === 0) {
@@ -182,9 +191,11 @@ const RoutePosting: React.FC<RoutePostingProps> = ({
 
       <View className="flex flex-row justify-between text-sm mt-8">
       <Text className="font-Poppins_Light text-sm text-gray-600">
-          Distance
+          Distance 
           <Text className="font-Poppins_Light text-sm font-bold">
-            {` ${distance} km`}
+          {distanceUnit === 'miles'
+            ? ` ${convertToMiles(distance)} mi`
+            : ` ${distance} km`}
           </Text>
         </Text>
         <Text className="font-Poppins_Light text-sm text-gray-600">
@@ -196,7 +207,9 @@ const RoutePosting: React.FC<RoutePostingProps> = ({
         <Text className="font-Poppins_Light text-sm text-gray-600">
           Speed
           <Text className="font-Poppins_Light text-sm font-bold">
-            {` ${(distance / (time / 3600)).toFixed(2)} km/h`}  
+            {distanceUnit === 'miles'
+            ? ` ${(convertToMiles(distance/ (time / 3600)))} mph`
+            : ` ${(distance / (time / 3600)).toFixed(2)} km/h`}
           </Text>
         </Text>
         </View>

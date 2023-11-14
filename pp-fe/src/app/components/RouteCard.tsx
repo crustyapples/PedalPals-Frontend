@@ -4,6 +4,7 @@ import MapView, { PROVIDER_GOOGLE, Polyline, Marker } from "react-native-maps";
 import { Pressable } from "react-native";
 import { Link } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
+import { useDistanceUnit } from '../contexts/DistanceUnitContext';
 
 type RouteCardProps = {
   start_coordinates?: string;
@@ -20,6 +21,16 @@ const RouteCard: React.FC<RouteCardProps> = ({
   distance,
   route_geometry,
 }) => {
+
+  const { distanceUnit, toggleDistanceUnit } = useDistanceUnit();
+  // console.log("User specified unit", distanceUnit);
+
+  const convertToMiles = (distanceInKm) => {
+    // Conversion factor: 1 kilometer = 0.621371 miles
+    return (distanceInKm * 0.621371).toFixed(2);
+  };
+
+
   const routeCoordinates = polyline
     .decode(route_geometry)
     .map((coordinate) => ({
@@ -111,7 +122,9 @@ const RouteCard: React.FC<RouteCardProps> = ({
           Distance
         </Text>
         <Text className="font-Poppins_Medium text-md text-gray-800">
-          {`${distance} km`}
+          {distanceUnit === 'miles'
+            ? ` ${convertToMiles(distance)} mi`
+            : ` ${Math.round(distance)} km`}
         </Text>
         <Pressable className="mt-4">
           <Link
