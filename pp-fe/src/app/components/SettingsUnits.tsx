@@ -11,7 +11,7 @@ import { useDistanceUnit } from "../contexts/DistanceUnitContext"
 const SettingsUnits: React.FC= () => {
     const [selectedUnit, setselectedUnit] = useState();
 
-    const [isEnabled, setIsEnabled] = useState(false);
+    const [isEnabled, setIsEnabled] = useState(true);
     const { toggleDistanceUnit } = useDistanceUnit();
     const toggleSwitch = () => 
         {
@@ -22,9 +22,9 @@ const SettingsUnits: React.FC= () => {
 
 
     return(
-        <View className='rounded-lg bg-gray-100'>
+        <View className='rounded-lg bg-[]'>
 
-                <Text className = "font-Poppins_Bold text-2xl text-black ">Units</Text>
+                <Text className = "font-Poppins_Bold text-2xl text-black font-bold">Units</Text>
 
 
                 {/* <Picker
@@ -39,8 +39,8 @@ const SettingsUnits: React.FC= () => {
                 <View className = "flex-row items-center">
                     <Text className = "text-center justify-items-center">MI</Text>
                     <Switch
-                        trackColor={{false: '#767577', true: '#81b0ff'}}
-                        thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                        trackColor={{false: '#ffffff', true: '#2dd4bf'}}
+                        thumbColor={isEnabled ? '#ffffff' : '#d1d5db'}
                         ios_backgroundColor="#3e3e3e"
                         onValueChange={toggleSwitch}
                         value={isEnabled}

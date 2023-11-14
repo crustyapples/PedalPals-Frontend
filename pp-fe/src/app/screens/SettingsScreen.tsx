@@ -17,7 +17,7 @@ const SettingsPage: React.FC = () => {
   }, [navigation]);
 
   return (
-    <View className="bg-white h-screen">
+    <View className="bg-[#FFFFFF] h-screen m-4">
       <SettingsUnits />
       {/* <SettingsPrivacy />
       <SettingsAccount /> */}

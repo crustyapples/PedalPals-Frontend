@@ -21,21 +21,30 @@ const GetStarted = ({ onPressGsButton }) => {
 
 
   return (
-    <View className = "h-screen">
+    <View className = "h-screen bg-white">
         <View className = "flex-1 flex-col">
             <Swiper loop={false} showsButtons={false} showsPagination={true} paginationStyle={{ bottom: 10 }}>
             {slides.map((slide, index) => (
                 <View key={index}>
                     <View className = "h-3/4"  >
-                        <View className = "">
+                    
                         {/* <Text className='font-bold text-5xl text-center mb-12'>PedalPals</Text> */}
                             <Image className = "object-cover w-full h-full" source={slide.image}  />
-                        </View>
+                            
+                            <View className="absolute opacity-50 items-center" />
+                              <Text className="absolute top-32 text-white text-center text-5xl font-Poppins_Bold justify-items-center items-center w-full">
+                                PedalPals
+                              </Text>
+                              
+
+
                     </View>
 
                     <View className="h-1/4 items-center justify-center"  key={`${index}-caption`}>
-                            <Text className = "text-center text-base">{slide.caption}</Text>
+                            <Text className = "text-center font-Poppins_Bold text-2xl px-8 mb-8">{slide.caption}</Text>
                         </View>
+
+                        
 
                 </View>
             ))}
@@ -44,8 +53,8 @@ const GetStarted = ({ onPressGsButton }) => {
 
         <View className="ml-4 mr-4">
             <Pressable onPress={onPressGsButton}>
-                <View className="bg-gray-200 h-16 w-full items-center justify-center mb-16 rounded-lg">
-                    <Text className = "text-center font-bold text-2xl">Get Started</Text>
+                <View className="bg-[#2dd4bf] h-16 w-full items-center justify-center mb-16 rounded-lg">
+                    <Text className = "text-center font-bold text-2xl text-white">Get Started</Text>
                 </View>
             </Pressable>
         </View>
