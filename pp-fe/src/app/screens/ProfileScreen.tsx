@@ -7,6 +7,7 @@ import { useAuthDetails } from '../contexts/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import { useLayoutEffect } from 'react';
 
+
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
 type User = {
@@ -34,6 +35,7 @@ const ProfilePage: React.FC = () => {
   const [userId, setUserId] = useState('');
   const [refreshing, setRefreshing] = useState(false);
   const [userData, setUserData] = useState<User | null>(null);
+
 
   const fetchUserData = async () => {
     try {

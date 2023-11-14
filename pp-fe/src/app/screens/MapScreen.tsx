@@ -165,10 +165,10 @@ const MapPage: React.FC<MapPageProps> = ({pre_start_coordinates,pre_end_coordina
 
       let location = await Location.getCurrentPositionAsync({});
       setRegion({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        // latitude: 1.3492,
-        // longitude: 103.6845,
+        // latitude: location.coords.latitude,
+        // longitude: location.coords.longitude,
+        latitude: 1.3492,
+        longitude: 103.6845,
       });
     })();
   }, []);

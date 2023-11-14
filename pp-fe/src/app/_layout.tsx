@@ -7,6 +7,8 @@ import { useColorScheme } from 'react-native';
 
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthScreen from './screens/AuthScreen';
+import {DistanceUnitProvider} from './contexts/DistanceUnitContext';
+
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -57,7 +59,9 @@ function RootLayoutNav() {
 const App = () => {
   return (
     <AuthProvider>
-      <RootLayout />
+      <DistanceUnitProvider>
+        <RootLayout />
+      </DistanceUnitProvider>
     </AuthProvider>
   );
 }

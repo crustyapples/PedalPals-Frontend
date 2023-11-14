@@ -14,6 +14,7 @@ import {
 import { useAuthDetails } from "../contexts/AuthContext";
 import { FontAwesome } from "@expo/vector-icons";
 import * as Location from 'expo-location';
+import { useDistanceUnit } from '../contexts/DistanceUnitContext';
 
 type StartPathProps = {
   routeSummary: any;
@@ -39,6 +40,14 @@ const StartPath: React.FC<StartPathProps> = ({
   // const [startPoint, setStartPoint] = useState("");
   // const [endPoint, setEndPoint] = useState ("");
   //   const [acceptingRoute, setAcceptingRoute] = useState(false); // Add this state
+
+  const { distanceUnit, toggleDistanceUnit } = useDistanceUnit();
+  console.log("User specified unit", distanceUnit);
+
+  const convertToMiles = (distanceInKm) => {
+    // Conversion factor: 1 kilometer = 0.621371 miles
+    return (distanceInKm * 0.621371).toFixed(2);
+  };
 
   const [totalDistance, setTotalDistance] = useState(0);
   const [routeId, setRouteId] = useState("");
@@ -369,13 +378,17 @@ const StartPath: React.FC<StartPathProps> = ({
         <View className=" flex-col justify-around">
           <View style={{ display: timerStarted ? "none" : "flex" }}>
             <Text className="text-3xl text-center font-Poppins_Bold">
-              {(routeSummary.total_distance / 1000).toFixed(2)} KM
+            {distanceUnit === 'miles'
+            ? `${convertToMiles(routeSummary.total_distance / 1000)} MI`
+            : `${(routeSummary.total_distance / 1000).toFixed(2)} KM`}
             </Text>
           </View>
 
           <View style={{ display: timerStarted ? "flex" : "none" }}>
             <Text className="text-3xl text-center font-Poppins_Bold">
-              {(totalDistance).toFixed(2)} KM
+            {distanceUnit === 'miles'
+            ? `${convertToMiles(totalDistance)} MI`
+            : `${(totalDistance).toFixed(2)} KM`}
             </Text>
           </View>
 

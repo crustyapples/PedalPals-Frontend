@@ -13,6 +13,7 @@ import { useAuthDetails } from "../contexts/AuthContext";
 import Modal from "react-native-modal";
 import polyline from "@mapbox/polyline";
 import MapView, { PROVIDER_GOOGLE, Polyline, Marker } from 'react-native-maps';
+import { useDistanceUnit } from '../contexts/DistanceUnitContext';
 
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
@@ -54,6 +55,14 @@ const PostCard: React.FC<Post> = ({
   const [numLikes, setNumLikes] = useState(likes.length);
   const [numComments, setNumComments] = useState(comments.length);
   const [displayedComments, setDisplayedComments] = useState(comments);
+
+  const { distanceUnit, toggleDistanceUnit } = useDistanceUnit();
+  // console.log("User specified unit", distanceUnit);
+
+  const convertToMiles = (distanceInKm) => {
+    // Conversion factor: 1 kilometer = 0.621371 miles
+    return (distanceInKm * 0.621371).toFixed(2);
+  };
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -316,7 +325,9 @@ const PostCard: React.FC<Post> = ({
         <Text className="font-Poppins_Light text-sm text-gray-600">
           Distance
           <Text className="font-Poppins_Light text-sm font-bold">
-            {` ${route.distance} km`}
+          {distanceUnit === 'miles'
+            ? `${convertToMiles(route.distance)} mi`
+            : `${(route.distance).toFixed(2)} km`}
           </Text>
         </Text>
         <Text className="font-Poppins_Light text-sm text-gray-600">
@@ -328,7 +339,10 @@ const PostCard: React.FC<Post> = ({
         <Text className="font-Poppins_Light text-sm text-gray-600">
           Speed
           <Text className="font-Poppins_Light text-sm font-bold">
-            {` ${(route.distance / (route.time / 60)).toFixed(2)} km/h`}
+          {distanceUnit === 'miles'
+            ? ` ${convertToMiles((route.distance / (route.time / 60)))} mph`
+            : ` ${(route.distance / (route.time / 60)).toFixed(2)} km/h`}
+
           </Text>
         </Text>
         {/* <Text>Distance: {route.distance} km</Text> */}
