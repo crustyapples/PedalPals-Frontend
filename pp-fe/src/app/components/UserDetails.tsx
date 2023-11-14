@@ -20,10 +20,18 @@ const colors = ["#b4cce9", "#b4e9bc", "#d9f892", "#f1b0c6"];
 function randomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+function stringToIndex(str) {
+  let sum = 0;
+  for (let i = 0; i < str.length; i++) {
+      sum += str.charCodeAt(i);
+  }
+  return sum % 4;
+}
 
 
 type UserDetailsProps = {
   profilePic?: any;
+  name?: string;
   username: string;
   numOfPals: number;
   teleHandle: string;
@@ -38,6 +46,7 @@ type UserDetailsProps = {
 
 const UserDetails: React.FC<UserDetailsProps> = ({
   profilePic,
+  name,
   username,
   numOfPals,
   teleHandle,
@@ -81,7 +90,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
               className="w-20 h-20 rounded-full border-2 border-gray-200 shadow-sm"
             />
           ) : (
-            <View className={`w-20 h-20 rounded-full bg-[${colors[randomInteger(0,3)]}]`} />
+            <View className={`w-20 h-20 rounded-full bg-[${colors[stringToIndex(username)]}]`} />
           )}
         </View>
       </View>
@@ -89,7 +98,10 @@ const UserDetails: React.FC<UserDetailsProps> = ({
 
 
       <Text className="font-Poppins_Bold text-4xl text-black text-center mb-2">
-        {username}
+        {name}
+      </Text>
+      <Text className="font-Poppins_Bold text-2xl text-black text-center mb-2">
+        @{username}
       </Text>
 
       <View className="flex-row justify-center items-center mb-4">

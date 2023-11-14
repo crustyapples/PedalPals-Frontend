@@ -25,8 +25,8 @@ const GetStarted = ({ onPressGsButton }) => {
         <View className = "flex-1 flex-col">
             <Swiper loop={false} showsButtons={false} showsPagination={true} paginationStyle={{ bottom: 10 }}>
             {slides.map((slide, index) => (
-                <View className=''>
-                    <View className = "h-3/4" key={index} >
+                <View key={index}>
+                    <View className = "h-3/4"  >
                         <View className = "">
                         {/* <Text className='font-bold text-5xl text-center mb-12'>PedalPals</Text> */}
                             <Image className = "object-cover w-full h-full" source={slide.image}  />

@@ -15,6 +15,15 @@ function randomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function stringToIndex(str) {
+  let sum = 0;
+  for (let i = 0; i < str.length; i++) {
+      sum += str.charCodeAt(i);
+  }
+  return sum % 4;
+}
+
+
 const LeaderBoardEntry: React.FC<LeaderBoardEntryProps> = ({
   leadership_position,
   profilePic,
@@ -34,7 +43,7 @@ const LeaderBoardEntry: React.FC<LeaderBoardEntryProps> = ({
               className="w-6 h-6 rounded-full border-2 border-gray-200 shadow-sm"
             />
           ) : (
-            <View className={`w-6 h-6 rounded-full bg-[${colors[randomInteger(0,3)]}]`} />
+            <View className={`w-6 h-6 rounded-full bg-[${colors[stringToIndex(name)]}]`} />
           )}
         </View>
         <Text className="ml-2 text-black font-medium text-base">{name}</Text>

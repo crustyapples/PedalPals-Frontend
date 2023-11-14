@@ -250,7 +250,7 @@ const NearbyPage: React.FC = () => {
     getAllUsers().then((data) => {
       handleSearch(searchedUser, data);
     });
-  }, [token,userId]);
+  }, [searchedUser,userId]);
 
   return (
     <ScrollView
@@ -341,6 +341,7 @@ const NearbyPage: React.FC = () => {
                   {/* Pass distance prop only when 'nearby' tab is active */}
                   <UserItem
                     id={user.id}
+                    name={user.name}
                     username={user.username}
                     distance={user.distance}
                     token={token}
@@ -356,6 +357,7 @@ const NearbyPage: React.FC = () => {
                   {/* Do not pass distance prop when 'search' tab is active */}
                   <UserItem
                     id={user.id}
+                    name={user.name}
                     username={user.username}
                     token={token}
                     userId={userId}
