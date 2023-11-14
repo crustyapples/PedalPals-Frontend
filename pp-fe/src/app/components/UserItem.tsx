@@ -3,6 +3,7 @@ import { useAuthDetails } from "../contexts/AuthContext";
 import { useState, useEffect } from "react";
 import { Link } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
+import { useDistanceUnit } from "../contexts/DistanceUnitContext";
 
 type UserItemProps = {
   id: number;
@@ -40,9 +41,17 @@ const UserItem: React.FC<UserItemProps> = ({
   updateFriend,
 }) => {
   const [added, setAdded] = useState(isFriend);
+  const { distanceUnit, toggleDistanceUnit } = useDistanceUnit();
+  console.log("User specified unit", distanceUnit);
+
+  const convertToMiles = (distanceInKm) => {
+    // Conversion factor: 1 kilometer = 0.621371 miles
+    return (distanceInKm * 0.621371).toFixed(2);
+  };
 
   let displayDistance = "0 km";
   displayDistance = distance ? `${distance} km` : displayDistance;
+  displayDistance = distanceUnit === "miles" ? `${convertToMiles(distance)} mi` : displayDistance;
 
   const addRemoveFriend = async (friendId, toAdd) => {
     let url = `${BASE_URL}/add-friend/${friendId}`;
