@@ -32,7 +32,7 @@ export default function TabLayout() {
     tabBarActiveTintColor: '#14b8a6', // Set your desired active tab text color
     tabBarInactiveTintColor: '#888888',
     headerStyle: {
-      backgroundColor: '#99f6e4',
+      backgroundColor: '#14b8a6',
     },
     headerTitleStyle: {
       color: '#000000',
@@ -117,6 +117,7 @@ export default function TabLayout() {
         options={{
           title: "Routes",
           tabBarIcon: ({ color }) => <TabBarIcon name="road" color={color} />,
+          headerTitleAlign: "center"
         }}
       />
 

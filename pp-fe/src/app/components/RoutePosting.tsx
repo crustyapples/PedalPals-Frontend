@@ -145,7 +145,7 @@ const RoutePosting: React.FC<RoutePostingProps> = ({
   }, []);
 
   return (
-    <View className="bg-[] p-4 h-screen rounded-lg shadow-md m-2">
+    <View className="bg-[#ffffff] p-4 h-screen rounded-lg shadow-md m-2">
       {/* <Text>{time}</Text>
       <Text>{distance}</Text> */}
       {/* <Text>{routeCoordinates}</Text> */}
