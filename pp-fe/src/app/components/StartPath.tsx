@@ -196,7 +196,7 @@ const StartPath: React.FC<StartPathProps> = ({
     };
     return (
       <TouchableOpacity onPress={handleButtonPress}>
-        <View className="bg-[#ccfbf1] rounded-full text-left h-16 w-16 justify-center">
+        <View className="bg-[#d1fae5] rounded-3xl h-16 w-full justify-center">
           <Text className="text-[#334155]  text-center font-Poppins_Bold ">
             START
           </Text>
@@ -239,7 +239,7 @@ const StartPath: React.FC<StartPathProps> = ({
     };
     return (
       <TouchableOpacity onPress={handleButtonPress}>
-        <View className="bg-[#fca5a5] rounded-full text-left h-16 w-16 justify-center">
+        <View className="bg-[#fca5a5] rounded-3xl text-left h-16 w-36 justify-center">
           <Text className="text-[#334155] text-center font-Poppins_Bold ">
             STOP
           </Text>
@@ -257,7 +257,7 @@ const StartPath: React.FC<StartPathProps> = ({
     };
     return (
       <TouchableOpacity onPress={handleButtonPress}>
-        <View className="bg-[#fde68a] rounded-full text-left h-16 w-16 justify-center">
+        <View className="bg-[#fde68a] rounded-3xl text-left h-16 w-36 justify-center">
           <Text className="text-[#334155]  text-center font-Poppins_Bold ">
             PAUSE
           </Text>
@@ -401,13 +401,13 @@ const StartPath: React.FC<StartPathProps> = ({
         </View>
       </View>
 
-      <View className="flex-row  mt-5 items-center justify-between">
-        <View style={{ display: timerStarted ? "none" : "flex" }}>
+      <View className="flex-row  mt-5 items-center justify-between w-full">
+        <View style={{ display: timerStarted ? "none" : "flex", width: "100%" }}>
           <StartButton />
         </View>
 
-        <View style={{ display: timerStarted ? "flex" : "none" }}>
-          <View className="flex-row">
+        <View style={{ display: !timerStarted ?  "none" : "flex", width: "100%" }}>
+          <View className="flex-row w-full justify-between">
             <StopButton />
 
             <View className="ml-3">
@@ -422,10 +422,10 @@ const StartPath: React.FC<StartPathProps> = ({
           </View>
         </View>
 
-        <View className="flex-row">
+        {/* <View className="flex-row">
           <ShareButton />
           <BookmarkButton />
-        </View>
+        </View> */}
       </View>
     </View>
   );

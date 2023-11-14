@@ -158,21 +158,26 @@ const RouteInfoPlanning: React.FC<RouteInfoPlanningProps> = ({
               }}
             />
             {isStartListVisible && start_Text.length > 0 && (
-              <FlatList
-                data={dataStart}
-                keyExtractor={(item, index) => item.toString()}
-                renderItem={({ item, index }) => (
-                  <TouchableOpacity
-                    onPress={() => {
-                      onChangeStartText(item[0]);
-                      setStartAddr(item);
-                      setStartListVisible(false);
-                    }}
-                  >
-                    <Text>{item[0]}</Text>
-                  </TouchableOpacity>
-                )}
-              />
+              <View style={{ backgroundColor: '#ffffff' }}>
+                <FlatList
+                  data={dataStart}
+                  keyExtractor={(item, index) => item.toString()}
+                  renderItem={({ item, index }) => (
+                    <TouchableOpacity
+                      onPress={() => {
+                        onChangeStartText(item[0]);
+                        setStartAddr(item);
+                        setStartListVisible(false);
+                      }}
+                    >
+                      <Text>{item[0]}</Text>
+                    </TouchableOpacity>
+                  )}
+                  ItemSeparatorComponent={() => 
+                    <View style={{ height: 1, backgroundColor: "#D3D3D3" }} />}
+                      
+                />
+              </View>
             )}
           </View>
 
@@ -188,6 +193,7 @@ const RouteInfoPlanning: React.FC<RouteInfoPlanningProps> = ({
               }}
             />
             {isEndListVisible && end_Text.length > 0 && (
+            <View style={{ backgroundColor: '#ffffff' }}>
               <FlatList
                 data={dataEnd}
                 keyExtractor={(item, index) => item.toString()}
@@ -202,7 +208,10 @@ const RouteInfoPlanning: React.FC<RouteInfoPlanningProps> = ({
                     <Text>{item[0]}</Text>
                   </TouchableOpacity>
                 )}
+                ItemSeparatorComponent={() => 
+                  <View style={{ height: 1, backgroundColor: "#D3D3D3" }} />}
               />
+              </View>
             )}
           </View>
           </View>)}

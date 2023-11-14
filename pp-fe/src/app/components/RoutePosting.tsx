@@ -122,10 +122,10 @@ const RoutePosting: React.FC<RoutePostingProps> = ({
     };
     return (
       <TouchableOpacity onPress={handleButtonPress}>
-        <View className="bg-[#d1d5db] text-left h-16 w-full ml-4 justify-center rounded-lg">
+        <View className="text-left w-full justify-center rounded-lg">
         
-          <Text className="text-gray-600 text-center font-Poppins_Bold font-bold text-2xl">
-              Share with my pals!
+          <Text className="text-white text-center font-Poppins_Bold font-bold text-2xl">
+              Share
             </Text>
         
 
@@ -145,7 +145,7 @@ const RoutePosting: React.FC<RoutePostingProps> = ({
   }, []);
 
   return (
-    <View className="bg-white p-4 h-screen rounded-lg shadow-md m-2">
+    <View className="bg-[] p-4 h-screen rounded-lg shadow-md m-2">
       {/* <Text>{time}</Text>
       <Text>{distance}</Text> */}
       {/* <Text>{routeCoordinates}</Text> */}
@@ -159,7 +159,7 @@ const RoutePosting: React.FC<RoutePostingProps> = ({
         }}
       />
 
-<MapView
+      <MapView
         provider={PROVIDER_GOOGLE}
         // style={{ flex: 1 }}
         className = "w-full h-64 rounded-lg mt-8 mb-2"
@@ -215,7 +215,7 @@ const RoutePosting: React.FC<RoutePostingProps> = ({
         </View>
 
 
-        <View className="flex-col flex  justify-center items-center h-32">
+        <View className="flex-col flex bg-[#14b8a6]  justify-center items-center w-full rounded-md h-12 mt-24">
           <PostButton />
         </View>
     </View>
