@@ -14,6 +14,7 @@ import Modal from "react-native-modal";
 import polyline from "@mapbox/polyline";
 import MapView, { PROVIDER_GOOGLE, Polyline, Marker } from "react-native-maps";
 import { useDistanceUnit } from "../contexts/DistanceUnitContext";
+import { Link } from "expo-router";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
@@ -68,6 +69,13 @@ const PostCard: React.FC<Post> = ({
 
   function randomInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+  function stringToIndex(str) {
+    let sum = 0;
+    for (let i = 0; i < str.length; i++) {
+        sum += str.charCodeAt(i);
+    }
+    return sum % 4;
   }
 
   useEffect(() => {
@@ -309,7 +317,19 @@ const PostCard: React.FC<Post> = ({
               className="w-20 h-20 rounded-full border-2 border-gray-200 shadow-sm"
             />
           ) : (
-            <View className={`w-8 h-8 rounded-full bg-[${colors[randomInteger(0,3)]}]`} />
+            <Pressable className="mt-2">
+            <Link
+              href={{
+                pathname: "/screens/FriendScreen",
+                params: {
+                  userId: userId,
+                  token: token,
+                },
+              }}
+            >
+            <View className={`w-8 h-8 rounded-full bg-[${colors[stringToIndex(user)]}]`} />
+            </Link>
+          </Pressable>
           )}
         </View>
         <View className="ml-2 mb-2">

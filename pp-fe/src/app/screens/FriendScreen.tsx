@@ -12,6 +12,7 @@ const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
 type User = {
   _id: string;
+  username: string;
   name: string;
   email: string;
   telegram: string;
@@ -71,7 +72,8 @@ const FriendPage: React.FC = () => {
       {userData && (
         <>
           <UserDetails
-            username={userData.name}
+            username={userData.username}
+            name={userData.name}
             numOfPals={userData.friends_list.length}
             teleHandle={userData.telegram || "@thelegend27"}
             instaHandle={userData.instagram || "@thelegend27"}

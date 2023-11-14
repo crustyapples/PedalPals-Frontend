@@ -7,6 +7,7 @@ import { useDistanceUnit } from "../contexts/DistanceUnitContext";
 
 type UserItemProps = {
   id: number;
+  name: string;
   username: string;
   distance?: number;
   avatar?: any;
@@ -36,10 +37,20 @@ function randomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function stringToIndex(str) {
+  let sum = 0;
+  for (let i = 0; i < str.length; i++) {
+      sum += str.charCodeAt(i);
+  }
+  return sum % 4;
+}
+
+
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
 const UserItem: React.FC<UserItemProps> = ({
   id,
+  name,
   username,
   distance,
   avatar,
@@ -96,6 +107,7 @@ const UserItem: React.FC<UserItemProps> = ({
     }
   };
 
+
   return (
     <View className="flex-col items-center p-4 bg-white shadow-md rounded-lg m-3">
       <View className="mb-3">
@@ -105,7 +117,7 @@ const UserItem: React.FC<UserItemProps> = ({
             className="w-20 h-20 rounded-full border-2 border-gray-200 shadow-sm"
           />
         ) : (
-          <View className={`w-20 h-20 rounded-full bg-[${colors[randomInteger(0,3)]}]`} />
+          <View className={`w-20 h-20 rounded-full bg-[${colors[stringToIndex(username)]}]`} />
         )}
       </View>
       <Text className="font-semibold text-lg mb-1">{username}</Text>
