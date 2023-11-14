@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native';
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
+import GetStarted from '../components/GetStarted';
 
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
@@ -14,6 +15,7 @@ const AuthScreen = () => {
   const [username, setUsername] = useState('');
   const [name, setName] = useState('');
   const [isLogin, setIsLogin] = useState(true);
+  const [isGetStarted, setIsgetStarted] = useState(true);
 
   const { login } = useAuth();
 
@@ -114,55 +116,71 @@ const AuthScreen = () => {
       Alert.alert('Authentication error', 'Something went wrong');
     }
   };
+
+  const slides = [
+    { image: require("@/src/assets/images/favicon.png"), caption: "Caption 1" },
+    { image: require("@/src/assets/images/fire-icon.png"), caption: "Caption 2" }
+  ];
+
+  const handleGsButton = () => {
+    setIsgetStarted(false);
+  };
   
 
   return (
-    <View className='flex justify-center pt-64 px-4'>
-      <Text className='font-bold text-5xl text-center mb-12'>Welcome to PedalPals!</Text>
-      {!isLogin && (
-        <>
-          <TextInput
-            value={username}
-            onChangeText={setUsername}
-            placeholder="Username"
-            placeholderTextColor={'gray'}
-            className='border rounded p-2 mb-4'
-            autoCapitalize="none"
-          />
-          <TextInput
-            value={name}
-            onChangeText={setName}
-            placeholder="Name"
-            placeholderTextColor={'gray'}
-            className='border rounded p-2 mb-4'
-          />
-        </>
+    
+    <View>
+      {isGetStarted? (
+      <GetStarted onPressGsButton = {handleGsButton}/>
+      ) : (
+      <View className='flex justify-center pt-64 px-4'>
+        <Text className='font-bold text-5xl text-center mb-12'>Welcome to PedalPals!</Text>
+        {!isLogin && (
+          <>
+            <TextInput
+              value={username}
+              onChangeText={setUsername}
+              placeholder="Username"
+              placeholderTextColor={'gray'}
+              className='border rounded p-2 mb-4'
+              autoCapitalize="none"
+            />
+            <TextInput
+              value={name}
+              onChangeText={setName}
+              placeholder="Name"
+              placeholderTextColor={'gray'}
+              className='border rounded p-2 mb-4'
+            />
+          </>
+        )}
+        <TextInput
+          value={email}
+          onChangeText={setEmail}
+          placeholder="Email"
+          placeholderTextColor={'gray'}
+          className='border rounded p-2 mb-4'
+          // style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 8 }}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+        <TextInput
+          value={password}
+          onChangeText={setPassword}
+          placeholderTextColor={'gray'}
+          className='border rounded p-2 mb-4'
+          placeholder="Password"
+          // style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 8 }}
+          secureTextEntry
+        />
+        <Button title={isLogin ? 'Login' : 'Register'} onPress={authenticate} />
+        <Button
+          title={`Switch to ${isLogin ? 'Register' : 'Login'}`}
+          onPress={() => setIsLogin(!isLogin)}
+          color="gray"
+        />
+      </View>
       )}
-      <TextInput
-        value={email}
-        onChangeText={setEmail}
-        placeholder="Email"
-        placeholderTextColor={'gray'}
-        className='border rounded p-2 mb-4'
-        // style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 8 }}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      <TextInput
-        value={password}
-        onChangeText={setPassword}
-        placeholderTextColor={'gray'}
-        className='border rounded p-2 mb-4'
-        placeholder="Password"
-        // style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 8 }}
-        secureTextEntry
-      />
-      <Button title={isLogin ? 'Login' : 'Register'} onPress={authenticate} />
-      <Button
-        title={`Switch to ${isLogin ? 'Register' : 'Login'}`}
-        onPress={() => setIsLogin(!isLogin)}
-        color="gray"
-      />
     </View>
   );
 };

@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 import EditScreenInfo from "../components/EditScreenInfo";
-import { Text, View, ScrollView, FlatList } from "react-native";
+import { Text, View, ScrollView, FlatList, Switch } from "react-native";
 import SettingsUnits from "../components/SettingsUnits";
 import SettingsPrivacy from "../components/SettingsPrivacy";
 import SettingsAccount from "../components/SettingsAccount";
@@ -17,10 +17,10 @@ const SettingsPage: React.FC = () => {
   }, [navigation]);
 
   return (
-    <View>
+    <View className="bg-white h-screen">
       <SettingsUnits />
-      <SettingsPrivacy />
-      <SettingsAccount />
+      {/* <SettingsPrivacy />
+      <SettingsAccount /> */}
     </View>
   );
 };

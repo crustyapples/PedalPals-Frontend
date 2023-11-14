@@ -25,7 +25,20 @@ export default function TabLayout() {
   // const [showProfilePage, setshowProfilePage] = useState(false);
 
   return (
-    <Tabs>
+    <Tabs screenOptions={{
+      tabBarStyle: {
+      backgroundColor: '#ffffff',
+    },
+    tabBarActiveTintColor: '#14b8a6', // Set your desired active tab text color
+    tabBarInactiveTintColor: '#888888',
+    headerStyle: {
+      backgroundColor: '#99f6e4',
+    },
+    headerTitleStyle: {
+      color: '#000000',
+    },
+    }}
+    >
       <Tabs.Screen
         name={"index"}
         options={{
@@ -74,7 +87,10 @@ export default function TabLayout() {
               </Link>              */}
             </View>
           ),
-          headerTitleAlign: "center"
+          headerTitleAlign: "center",
+          // headerStyle: {
+          //   backgroundColor: '#99f6e4', // Set the desired color
+          // },
         }}
       />
       <Tabs.Screen

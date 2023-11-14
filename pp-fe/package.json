@@ -43,6 +43,7 @@
     "react-native-screens": "~3.22.0",
     "react-native-secure-storage": "^0.1.2",
     "react-native-sensors": "^7.3.6",
+    "react-native-swiper": "^1.6.0",
     "react-native-web": "~0.19.6"
   },
   "devDependencies": {
