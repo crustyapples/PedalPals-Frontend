@@ -22,6 +22,8 @@ type User = {
   gamification: any;
 };
 
+
+
 const ProfilePage: React.FC = () => {
   const navigation = useNavigation();
 

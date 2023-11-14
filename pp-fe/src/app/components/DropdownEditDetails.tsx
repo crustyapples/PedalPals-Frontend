@@ -16,7 +16,7 @@ const DropdownEditDetails = ({ visibleState,token, userId }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({"user_profile":{"telegram":teleHandle,"instagram":teleHandle}})
+        body: JSON.stringify({"user_profile":{"telegram":teleHandle,"instagram":instaHandle}})
       });
 
       if (!response.ok) {

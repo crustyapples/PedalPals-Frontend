@@ -69,7 +69,7 @@ const StartPath: React.FC<StartPathProps> = ({
   const [location, setLocation] = useState(null);
   const [locations, setLocations] = useState([]);
 
-  // Start tracking live location and update states
+  // Update the location tracking function
   const startLocationTracking = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
@@ -77,7 +77,6 @@ const StartPath: React.FC<StartPathProps> = ({
       return;
     }
 
-    // Start tracking the location
     await Location.watchPositionAsync(
       {
         accuracy: Location.Accuracy.Highest,
@@ -85,7 +84,12 @@ const StartPath: React.FC<StartPathProps> = ({
       },
       (newLocation) => {
         setLocation(newLocation);
-        setLocations((currentLocations) => [...currentLocations, newLocation]);
+        setLocations((currentLocations) => {
+          const updatedLocations = [...currentLocations, newLocation];
+          // Calculate and update the total distance here
+          setTotalDistance(calculateTotalDistance(updatedLocations));
+          return updatedLocations;
+        });
       }
     );
   };
@@ -106,7 +110,7 @@ const StartPath: React.FC<StartPathProps> = ({
     return distance;
   };
     
-  const calculateTotalDistance = () => {
+  const calculateTotalDistance = (locations) => {
     let totalDistance = 0;
     for (let i = 1; i < locations.length; i++) {
       const startCoords = locations[i - 1].coords;
@@ -118,7 +122,7 @@ const StartPath: React.FC<StartPathProps> = ({
         endCoords.longitude
       );
     }
-    return totalDistance;
+    return totalDistance / 1000; // Convert to kilometers
   };
 
   // Timer functions
@@ -126,11 +130,6 @@ const StartPath: React.FC<StartPathProps> = ({
     if (!timerId) {
       const id = setInterval(() => {
         setSeconds((seconds) => seconds + 1);
-
-        // Update total distance every 10 seconds
-        let distanceTravelled = calculateTotalDistance();
-        distanceTravelled = distanceTravelled / 1000
-        setTotalDistance(distanceTravelled);
         
       }, 1000);
       setTimerId(id);
@@ -209,15 +208,15 @@ const StartPath: React.FC<StartPathProps> = ({
   const fetchData = async () => {
     try {
       const tempRouteData = routeData.route_summary;
-      const distanceTravelled = calculateTotalDistance() / 1000;
-      tempRouteData.total_distance = distanceTravelled;
+      
+      tempRouteData.total_distance = totalDistance;
       tempRouteData.total_time = seconds;
       setCurrentRouteData(tempRouteData);
 
       AcceptRoute().then((routeIdData) => {
         setRouteId(routeIdData);
         console.log("set routeid:", routeIdData);
-        sendDistanceToMapScreen(distanceTravelled);
+        sendDistanceToMapScreen(totalDistance);
         sendRouteIdToMapScreen(routeIdData);
         sendTimeToMapScreen(seconds);
         setStopClicked(true);

@@ -28,6 +28,14 @@ type User = {
   gamification: any;
 };
 
+
+const colors = ['#b4cce9', '#b4e9bc', '#d9f892', '#f1b0c6'];
+
+
+function randomInteger(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
 const UserItem: React.FC<UserItemProps> = ({
@@ -97,7 +105,7 @@ const UserItem: React.FC<UserItemProps> = ({
             className="w-20 h-20 rounded-full border-2 border-gray-200 shadow-sm"
           />
         ) : (
-          <View className="w-20 h-20 rounded-full bg-gray-300" />
+          <View className={`w-20 h-20 rounded-full bg-[${colors[randomInteger(0,3)]}]`} />
         )}
       </View>
       <Text className="font-semibold text-lg mb-1">{username}</Text>

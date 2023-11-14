@@ -195,7 +195,7 @@ const RoutePosting: React.FC<RoutePostingProps> = ({
           <Text className="font-Poppins_Light text-sm font-bold">
           {distanceUnit === 'miles'
             ? ` ${convertToMiles(distance)} mi`
-            : ` ${distance} km`}
+            : ` ${(distance).toFixed(2)} km`}
           </Text>
         </Text>
         <Text className="font-Poppins_Light text-sm text-gray-600">

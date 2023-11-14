@@ -12,8 +12,8 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useAuthDetails } from "../contexts/AuthContext";
 import Modal from "react-native-modal";
 import polyline from "@mapbox/polyline";
-import MapView, { PROVIDER_GOOGLE, Polyline, Marker } from 'react-native-maps';
-import { useDistanceUnit } from '../contexts/DistanceUnitContext';
+import MapView, { PROVIDER_GOOGLE, Polyline, Marker } from "react-native-maps";
+import { useDistanceUnit } from "../contexts/DistanceUnitContext";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
@@ -63,6 +63,12 @@ const PostCard: React.FC<Post> = ({
     // Conversion factor: 1 kilometer = 0.621371 miles
     return (distanceInKm * 0.621371).toFixed(2);
   };
+
+  const colors = ["#b4cce9", "#b4e9bc", "#d9f892", "#f1b0c6"];
+
+  function randomInteger(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -193,7 +199,7 @@ const PostCard: React.FC<Post> = ({
             <ScrollView className="mb-3">
               {displayedComments.map((commentObj, index) => (
                 <View key={index} className="p-2 border-b">
-                  <Text className="font-medium">{commentObj[2]}:</Text>
+                  <Text className="font-medium">{commentObj[0]}:</Text>
                   <Text className="text-sm">{commentObj[1]}</Text>
                 </View>
               ))}
@@ -220,11 +226,11 @@ const PostCard: React.FC<Post> = ({
   };
 
   const routeCoordinates = polyline
-  .decode(route.route_geometry)
-  .map((coordinate) => ({
-    latitude: coordinate[0],
-    longitude: coordinate[1],
-  }));
+    .decode(route.route_geometry)
+    .map((coordinate) => ({
+      latitude: coordinate[0],
+      longitude: coordinate[1],
+    }));
 
   const calculateRegion = () => {
     if (routeCoordinates.length === 0) {
@@ -237,7 +243,9 @@ const PostCard: React.FC<Post> = ({
     }
 
     const latitudes = routeCoordinates.map((coordinate) => coordinate.latitude);
-    const longitudes = routeCoordinates.map((coordinate) => coordinate.longitude);
+    const longitudes = routeCoordinates.map(
+      (coordinate) => coordinate.longitude
+    );
 
     const maxLatitude = Math.max(...latitudes);
     const minLatitude = Math.min(...latitudes);
@@ -258,12 +266,11 @@ const PostCard: React.FC<Post> = ({
   const region = calculateRegion();
 
   const ShowMap = () => {
-
-    return(
+    return (
       <MapView
         provider={PROVIDER_GOOGLE}
         // style={{ flex: 1 }}
-        className = "w-full h-40 rounded-lg"
+        className="w-full h-40 rounded-lg"
         region={{
           ...region,
           // latitudeDelta: 0.0922,
@@ -285,14 +292,12 @@ const PostCard: React.FC<Post> = ({
         <Polyline
           coordinates={routeCoordinates}
           strokeColor="#000"
-          strokeColors={['#7F0000']}
+          strokeColors={["#7F0000"]}
           strokeWidth={3}
         />
       </MapView>
     );
   };
-
-
 
   return (
     <View className="bg-white p-4 rounded-lg shadow-md m-2">
@@ -304,7 +309,7 @@ const PostCard: React.FC<Post> = ({
               className="w-20 h-20 rounded-full border-2 border-gray-200 shadow-sm"
             />
           ) : (
-            <View className="w-8 h-8 rounded-full bg-gray-300" />
+            <View className={`w-8 h-8 rounded-full bg-[${colors[randomInteger(0,3)]}]`} />
           )}
         </View>
         <View className="ml-2 mb-2">
@@ -317,7 +322,7 @@ const PostCard: React.FC<Post> = ({
 
       {/* Replace the below view with an image if available */}
       {/* <View className="bg-gray-200 w-full h-40 mt-2 rounded-lg mb-2" /> */}
-      <View className = "mt-2 mb-2">
+      <View className="mt-2 mb-2">
         <ShowMap />
       </View>
 
@@ -325,9 +330,9 @@ const PostCard: React.FC<Post> = ({
         <Text className="font-Poppins_Light text-sm text-gray-600">
           Distance
           <Text className="font-Poppins_Light text-sm font-bold">
-          {distanceUnit === 'miles'
-            ? `${convertToMiles(route.distance)} mi`
-            : `${(route.distance).toFixed(2)} km`}
+            {distanceUnit === "miles"
+              ? ` ${convertToMiles(route.distance)} mi`
+              : ` ${route.distance.toFixed(2)} km`}
           </Text>
         </Text>
         <Text className="font-Poppins_Light text-sm text-gray-600">
@@ -339,10 +344,9 @@ const PostCard: React.FC<Post> = ({
         <Text className="font-Poppins_Light text-sm text-gray-600">
           Speed
           <Text className="font-Poppins_Light text-sm font-bold">
-          {distanceUnit === 'miles'
-            ? ` ${convertToMiles((route.distance / (route.time / 60)))} mph`
-            : ` ${(route.distance / (route.time / 60)).toFixed(2)} km/h`}
-
+            {distanceUnit === "miles"
+              ? ` ${convertToMiles(route.distance / (route.time / 60))} mph`
+              : ` ${(route.distance / (route.time / 60)).toFixed(2)} km/h`}
           </Text>
         </Text>
         {/* <Text>Distance: {route.distance} km</Text> */}
@@ -361,7 +365,7 @@ const PostCard: React.FC<Post> = ({
             {numLikes} Likes
           </Text>
         </View>
-        <View >
+        <View>
           <PostComment />
         </View>
         <View className="items-center">
@@ -369,7 +373,6 @@ const PostCard: React.FC<Post> = ({
             {numComments} Comments
           </Text>
         </View>
-
       </View>
     </View>
   );
