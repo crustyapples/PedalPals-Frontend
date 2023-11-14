@@ -56,7 +56,7 @@ const GetStarted = ({ onPressGsButton }) => {
         </View>
         
     </View>
-    </View>
+    
   );
 };
 
