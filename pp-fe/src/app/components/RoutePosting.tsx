@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "expo-router"
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import * as Location from "expo-location";
 import MapButtons from "./MapButtons";
 import RouteInfoPlanning from "./RouteInfoPlanning";
@@ -114,12 +114,19 @@ const RoutePosting: React.FC<RoutePostingProps> = ({
   const PostButton = () => {
     const handleButtonPress = async () => {
       //   console.log('Button pressed!');
+
+      if (caption.length >= 100) {
+        Alert.alert('Caption too long', 'Please keep your caption under 100 characters.');
+        return; // Stop further execution
+      }
+
       PostRoute().then(() => {
         console.log("Route Posted!");
         setRoutePlanned(false);
         setRouteStopped(false);
       })
     };
+
     return (
       <TouchableOpacity onPress={handleButtonPress}>
         <View className="text-left w-full justify-center rounded-lg">

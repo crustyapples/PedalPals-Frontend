@@ -22,9 +22,9 @@ const SettingsUnits: React.FC= () => {
 
 
     return(
-        <View className='rounded-lg bg-[]'>
+        <View className='rounded-lg bg-[#FFFFFF] p-4 w-full items-center m-12'>
 
-                <Text className = "font-Poppins_Bold text-2xl text-black font-bold">Units</Text>
+                <Text className = "font-Poppins_Bold text-2xl text-black font-bold m-5">Unit of Length</Text>
 
 
                 {/* <Picker
@@ -37,15 +37,16 @@ const SettingsUnits: React.FC= () => {
                 </Picker> */}
 
                 <View className = "flex-row items-center">
-                    <Text className = "text-center justify-items-center">MI</Text>
+                    <Text className = "text-center text-lg mr-2">MI</Text>
                     <Switch
-                        trackColor={{false: '#ffffff', true: '#2dd4bf'}}
+                        style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
+                        trackColor={{false: '#e5e7eb', true: '#2dd4bf'}}
                         thumbColor={isEnabled ? '#ffffff' : '#d1d5db'}
                         ios_backgroundColor="#3e3e3e"
                         onValueChange={toggleSwitch}
                         value={isEnabled}
                         />
-                    <Text>KM</Text>
+                    <Text className="text-center text-lg ml-4">KM</Text>
                 </View>
 
                 {/* <View>

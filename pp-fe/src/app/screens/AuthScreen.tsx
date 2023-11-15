@@ -66,7 +66,7 @@ const AuthScreen = () => {
           response.data.error ===
           "Username must contain only alphanumeric characters"
         ) {
-          Alert.alert("Username invalid");
+          Alert.alert("Username must contain only alphanumeric characters");
         } else if (response.data.error === "Please choose another username") {
           Alert.alert("Username already taken! Please input another username");
         } else if (
@@ -74,8 +74,6 @@ const AuthScreen = () => {
           "Username should be between 1 and 10 characters"
         ) {
           Alert.alert("Username should be between 1 and 10 characters");
-        } else if (response.data.error === "Please choose another username") {
-          Alert.alert("Username already taken! Please input another username");
         } else if (response.data.error === "Email invalid") {
           Alert.alert("Invalid Email Address");
         } else if (response.data.error === "Email already registered") {
@@ -93,6 +91,13 @@ const AuthScreen = () => {
         ) {
           Alert.alert(
             "Invalid password. Your password should contain alphanumeric characters only"
+          );
+        } else if (
+          response.data.error ===
+          "Invalid password. Your password should contain at least one letter and one digit"
+        ) {
+          Alert.alert(
+            "Invalid password. Your password should contain at least one letter and one digit"
           );
         } else if (
           response.data.error ===
