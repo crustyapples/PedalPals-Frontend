@@ -8,7 +8,7 @@ type LeaderBoardEntryProps = {
   points: number;
 };
 
-const colors = ["orange", "red", "blue", "green"];
+const colors = ["yellow", "red", "pink", "purple"];
 const colors2 = ["#98b5df", "#98dfc0", "#df98d6", "#dfbd98"];
 
 function randomInteger(min, max) {
@@ -43,7 +43,7 @@ const LeaderBoardEntry: React.FC<LeaderBoardEntryProps> = ({
               className="w-6 h-6 rounded-full border-2 border-gray-200 shadow-sm"
             />
           ) : (
-            <View className={`w-6 h-6 rounded-full bg-[${colors2[stringToIndex(name)]}]`} />
+            <View className={`w-6 h-6 rounded-full bg-${colors[stringToIndex(name)]}-300`} />
           )}
         </View>
         <Text className="ml-2 text-black font-medium text-base">{name}</Text>

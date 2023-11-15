@@ -74,6 +74,7 @@ const NearbyPage: React.FC = () => {
     if (token && userId) {
       fetchUserData();
     }
+    
 
     setRefreshing(false);
   }, []);
@@ -360,6 +361,7 @@ const NearbyPage: React.FC = () => {
                     name={user.name}
                     username={user.username}
                     token={token}
+                    distance={user.distance}
                     userId={userId}
                     isFriend={userData.friends_list.includes(user.id)}
                     updateFriend={addRemoveFriend}
