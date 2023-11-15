@@ -30,7 +30,7 @@ type User = {
 };
 
 
-const colors = ["yellow", "red", "pink", "purple"];
+const colors = ["orange", "green", "red", "pink"];
 const colors2 = ["#98b5df", "#98dfc0", "#df98d6", "#dfbd98"];
 
 function randomInteger(min, max) {

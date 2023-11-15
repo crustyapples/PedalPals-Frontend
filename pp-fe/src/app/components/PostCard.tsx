@@ -72,7 +72,7 @@ const PostCard: React.FC<Post> = ({
     return (distanceInKm * 0.621371).toFixed(2);
   };
 
-  const colors = ["yellow", "red", "pink", "purple"];
+  const colors = ["orange", "green", "red", "pink"];
   const colors2 = ["#98b5df", "#98dfc0", "#df98d6", "#dfbd98"];
   function randomInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -214,7 +214,7 @@ const PostCard: React.FC<Post> = ({
             <ScrollView className="mb-3">
               {displayedComments.map((commentObj, index) => (
                 <View key={index} className="p-2 border-b">
-                  <Text className="font-medium">{commentObj[0]}:</Text>
+                  <Text className="font-medium">{commentObj[2] ? commentObj[2] : user}:</Text>
                   <Text className="text-sm">{commentObj[1]}</Text>
                 </View>
               ))}
@@ -335,9 +335,7 @@ const PostCard: React.FC<Post> = ({
                 }}
               >
                 <View
-                  className={`w-8 h-8 rounded-full bg-${
-                    colors[stringToIndex(user)]
-                  }-300`}
+                  className={`w-8 h-8 rounded-full bg-${colors[stringToIndex(user)]}-300`}
                 />
               </Link>
             </Pressable>
