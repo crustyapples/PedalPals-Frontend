@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, Alert, Image } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  Alert,
+  Image,
+  Pressable,
+} from "react-native";
 import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 import GetStarted from "../components/GetStarted";
@@ -126,12 +134,12 @@ const AuthScreen = () => {
       ) : (
         <View className="flex justify-center px-4">
           <View className="items-center">
-          <Image 
-          className="mt-32 h-64 w-64"
-          source={require("@/src/assets/images/logo.png")} />
+            <Image
+              className="mt-32 h-64 w-64"
+              source={require("@/src/assets/images/logo.png")}
+            />
           </View>
 
-  
           {!isLogin && (
             <>
               <TextInput
@@ -170,10 +178,15 @@ const AuthScreen = () => {
             // style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 8 }}
             secureTextEntry
           />
-          <Button
-            title={isLogin ? "Login" : "Register"}
-            onPress={authenticate}
-          />
+
+          <Pressable onPress={authenticate}>
+            <View className="bg-gray-200 h-12 w-full items-center justify-center rounded-lg">
+              <Text className="text-center font-bold text-xl">
+                {isLogin ? "Login" : "Register"}
+              </Text>
+            </View>
+          </Pressable>
+
           <Button
             title={`Switch to ${isLogin ? "Register" : "Login"}`}
             onPress={() => setIsLogin(!isLogin)}

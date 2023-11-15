@@ -275,7 +275,7 @@ const StartPath: React.FC<StartPathProps> = ({
     };
     return (
       <TouchableOpacity onPress={handleButtonPress}>
-        <View className="bg-[#FFFFFF] rounded-full text-left h-16 w-16 justify-center">
+        <View className="bg-[#FFFFFF] rounded-full text-left h-16 w-36 justify-center">
           <Text className="text-[#334155]  text-center font-Poppins_Bold ">
             RESUME
           </Text>

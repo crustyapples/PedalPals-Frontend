@@ -16,7 +16,7 @@ const GetStarted = ({ onPressGsButton }) => {
   const slides = [
     {
       image: require("@/src/assets/images/cycle-5.jpg"),
-      caption: "Manage your Cycling Activities All in One Place",
+      caption: "New Paths, New Friendships",
     },
     {
       image: require("@/src/assets/images/cycle-6.jpg"),
