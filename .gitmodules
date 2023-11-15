@@ -1,0 +1,3 @@
+[submodule "pp-be/PedalPals-Backend"]
+	path = pp-be/PedalPals-Backend
+	url = https://github.com/crustyapples/PedalPals-Backend.git
