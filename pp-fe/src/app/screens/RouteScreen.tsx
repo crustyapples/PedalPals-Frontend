@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAuthDetails } from "../contexts/AuthContext";
-import { View, ScrollView, RefreshControl } from "react-native";
+import { View, ScrollView, RefreshControl, Text } from "react-native";
 import RouteCard from "../components/RouteCard";
 
 const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
@@ -46,7 +46,7 @@ const RoutePage: React.FC = () => {
           const userRoutes = fetched_routes.filter((route) =>
             fetched_userData.analytics.routes.includes(route._id)
           );
-          console.log("User Routes:", userRoutes[0]);
+          userRoutes.reverse();
           setUserRoutes(userRoutes);
         })
       );
@@ -129,7 +129,8 @@ const RoutePage: React.FC = () => {
           const userRoutes = fetched_routes.filter((route) =>
             fetched_userData.analytics.routes.includes(route._id)
           );
-          console.log("User Routes:", userRoutes[0]);
+          // reverse the order of the routes so that the most recent route is at the top
+          userRoutes.reverse();
           setUserRoutes(userRoutes);
         })
       );
@@ -142,6 +143,12 @@ const RoutePage: React.FC = () => {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
+      
+
+<Text className="text-black font-Poppins_Bold text-2xl mt-8 mb-4 text-center">
+        Your Routes
+      </Text>
+
       <View className="flex-row flex-wrap justify-center">
         {userRoutes.map((route, index) => (
           <View key={index} >
