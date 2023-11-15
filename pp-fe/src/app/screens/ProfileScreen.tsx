@@ -115,7 +115,7 @@ const ProfilePage: React.FC = () => {
           />
                           <Text className="font-Poppins_Bold text-3xl text-black text-center mt-8">Posts</Text>
 
-          <UserPosts socialPostData={userData.posts} />
+          <UserPosts socialPostData={userData.posts.reverse()} />
         </>
       )}
     </ScrollView>
