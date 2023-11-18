@@ -123,7 +123,8 @@ const UserItem: React.FC<UserItemProps> = ({
       </View>
       <Text className="font-semibold text-lg mb-1">{username}</Text>
 
-      <Text className="text-sm text-gray-600 mb-3">{displayDistance}</Text>
+      {displayDistance != "0 km" ? (      <Text className="text-sm text-gray-600 mb-3">{displayDistance}</Text>
+):null}
 
       {added ? (
         <View className="bg-gray-500 w-full rounded-md shadow">
