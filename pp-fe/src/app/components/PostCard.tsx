@@ -72,6 +72,14 @@ const PostCard: React.FC<Post> = ({
     return (distanceInKm * 0.621371).toFixed(2);
   };
 
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const remainingSeconds = time % 60;
+    return `${minutes < 10 ? "0" : ""}${minutes}:${
+      remainingSeconds < 10 ? "0" : ""
+    }${remainingSeconds}`;
+  };
+
   const colors = ["orange", "green", "red", "pink"];
   const colors2 = ["#98b5df", "#98dfc0", "#df98d6", "#dfbd98"];
   function randomInteger(min, max) {
@@ -334,9 +342,7 @@ const PostCard: React.FC<Post> = ({
                   },
                 }}
               >
-                <View
-                  className={`w-8 h-8 rounded-full bg-${colors[stringToIndex(user)]}-300`}
-                />
+<FontAwesome name="user-circle" size={25} color="#4B5563" />
               </Link>
             </Pressable>
           )}
@@ -377,26 +383,26 @@ const PostCard: React.FC<Post> = ({
         )}
 
         <View className="flex flex-row justify-between text-sm mt-2">
-          <Text className="font-Poppins_Light text-sm text-gray-600">
+          <Text className="font-Poppins_Light text-xs text-gray-600">
             Distance
-            <Text className="font-Poppins_Light text-sm font-bold">
+            <Text className="font-Poppins_Light text-xs font-bold">
               {distanceUnit === "miles"
                 ? ` ${convertToMiles(route.distance)} mi`
                 : ` ${route.distance.toFixed(2)} km`}
             </Text>
           </Text>
-          <Text className="font-Poppins_Light text-sm text-gray-600">
+          <Text className="font-Poppins_Light text-xs text-gray-600">
             Time
-            <Text className="font-Poppins_Light text-sm font-bold">
-              {` ${route.time} min`}
+            <Text className="font-Poppins_Light text-xs font-bold">
+              {` ${formatTime(route.time)} min`}
             </Text>
           </Text>
-          <Text className="font-Poppins_Light text-sm text-gray-600">
+          <Text className="font-Poppins_Light text-xs text-gray-600">
             Speed
-            <Text className="font-Poppins_Light text-sm font-bold">
+            <Text className="font-Poppins_Light text-xs font-bold">
               {distanceUnit === "miles"
                 ? ` ${convertToMiles(route.distance / (route.time / 60))} mph`
-                : ` ${(route.distance / (route.time / 60)).toFixed(2)} km/h`}
+                : ` ${(route.distance / (route.time / 60 / 60)).toFixed(2)} km/h`}
             </Text>
           </Text>
         </View>

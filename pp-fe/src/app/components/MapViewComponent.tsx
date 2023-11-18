@@ -86,8 +86,7 @@ const MapViewComponent = ({ region, routeCoordinates, routePoints, showBicycleRa
           center: currentLocation,
           pitch: 0,
           heading: heading,
-          
-          
+          zoom: 15,          
         }}
       >
         {currentLocation && (

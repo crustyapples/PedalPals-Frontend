@@ -14,7 +14,8 @@ import Leaderboard from "../components/LeaderBoard";
 import WeeklyChallengeRoute from "../components/WeeklyChallengeRoute";
 import DropdownEditDetails from "./DropdownEditDetails";
 import { FontAwesome } from "@expo/vector-icons";
-const colors = ["orange", "green", "red", "pink"];
+
+const colors = ["gray", "gray", "gray", "gray"];
 const colors2 = ["#98b5df", "#98dfc0", "#df98d6", "#dfbd98"];
 
 function randomInteger(min, max) {
@@ -90,7 +91,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
               className="w-20 h-20 rounded-full border-2 border-gray-200 shadow-sm"
             />
           ) : (
-            <View className={`w-20 h-20 rounded-full bg-${colors[stringToIndex(username)]}-300`} />
+            <FontAwesome name="user-circle" size={100} color="#4B5563" />
           )}
         </View>
       </View>
@@ -144,17 +145,17 @@ const UserDetails: React.FC<UserDetailsProps> = ({
 
       <View className="flex-row justify-around mt-4">
         <View className="items-center">
-          <FontAwesome name="certificate" size={30} color="#B89130" />
+          <FontAwesome name="certificate" size={30} color="#F0870F" />
           <Text className="font-semibold text-lg">{numOfReward1}</Text>
         </View>
 
         <View className="items-center">
-          <FontAwesome name="star" size={30} color="#163760" />
+          <FontAwesome name="certificate" size={30} color="#C0C0C0" />
           <Text className="font-semibold text-lg">{numOfReward2}</Text>
         </View>
 
         <View className="items-center">
-          <FontAwesome name="fire" size={30} color="#F0870F" />
+          <FontAwesome name="certificate" size={30} color="#B89130" />
           <Text className="font-semibold text-lg">{numOfReward3}</Text>
         </View>
       </View>

@@ -1,5 +1,8 @@
 import { StyleSheet } from "react-native";
 import { Text, View, Image } from "react-native";
+import React, { useState } from "react";
+import Leaderboard from "../components/LeaderBoard";
+import { FontAwesome } from "@expo/vector-icons";
 
 type LeaderBoardEntryProps = {
   leadership_position: number;
@@ -43,7 +46,7 @@ const LeaderBoardEntry: React.FC<LeaderBoardEntryProps> = ({
               className="w-6 h-6 rounded-full border-2 border-gray-200 shadow-sm"
             />
           ) : (
-            <View className={`w-6 h-6 rounded-full bg-${colors[stringToIndex(name)]}-300`} />
+<FontAwesome name="user-circle" size={25} color="#4B5563" />
           )}
         </View>
         <Text className="ml-2 text-black font-medium text-base">{name}</Text>

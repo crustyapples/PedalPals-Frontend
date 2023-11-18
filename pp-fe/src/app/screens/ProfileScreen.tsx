@@ -38,6 +38,7 @@ const ProfilePage: React.FC = () => {
   const [userId, setUserId] = useState('');
   const [refreshing, setRefreshing] = useState(false);
   const [userData, setUserData] = useState<User | null>(null);
+  const [averageSpeed, setAverageSpeed] = useState(0);
 
 
   const fetchUserData = async () => {
@@ -56,6 +57,23 @@ const ProfilePage: React.FC = () => {
 
       const data = await response.json();
       setUserData(data);
+      
+      // from data.posts, from the route object, get the distance and time
+      // calculate the average speed
+
+      let totalDistance = 0;
+      let totalTime = 0;
+      let averageSpeed = 0;
+      data.posts.forEach((post) => {
+        totalDistance += post.route.distance;
+        totalTime += (post.route.time/60/60);
+      });
+
+      averageSpeed = totalDistance / totalTime;
+      console.log(averageSpeed);
+      setAverageSpeed(averageSpeed);
+
+
     } catch (error) {
       console.error('Error:', error);
       Alert.alert('Error', 'Failed to fetch user data');
@@ -111,7 +129,7 @@ const ProfilePage: React.FC = () => {
           />
           <UserStats
             totalDistanceTravelled={userData.analytics.total_distance}
-            averageSpeed={userData.analytics.avg_speed}
+            averageSpeed={averageSpeed}
           />
                           <Text className="font-Poppins_Bold text-3xl text-black text-center mt-8">Posts</Text>
 

@@ -117,7 +117,8 @@ const UserItem: React.FC<UserItemProps> = ({
             className="w-20 h-20 rounded-full border-2 border-gray-200 shadow-sm"
           />
         ) : (
-          <View className={`w-20 h-20 rounded-full bg-${colors[stringToIndex(username)]}-300`} />
+          <FontAwesome name="user-circle" size={25} color="#4B5563" />
+
         )}
       </View>
       <Text className="font-semibold text-lg mb-1">{username}</Text>
